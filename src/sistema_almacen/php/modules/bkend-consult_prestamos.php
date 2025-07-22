@@ -18,7 +18,7 @@ function getPrestamos($connection) {
 
 // Obtener un préstamo por número de ID
 function getPrestamoByID($connection, $numero) {
-    $sql = "SELECT * FROM equipo WHERE numero = :numero";
+    $sql = "SELECT * FROM prim14a WHERE numero = :numero";
     $stmt = $connection->prepare($sql);
 
     // Busca errores en cada solicitud

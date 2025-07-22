@@ -1,19 +1,20 @@
 <?php
-// Incluir el módulo de conexión y consultas de prestamos
+session_start();
 include_once '../modules/conn.php';
-include_once '../modules/bkend-consult_prestamos.php';
+include_once '../modules/bkend-auto-consult_prestamos.php';
 
-// Obtener todos los registros de préstamos
-$prestamos = getPrestamos($connection);
+// Validar existencia de sesión antes de continuar
+if (!isset($_SESSION['user-id'])) {
+    die("Acceso no autorizado. Por favor, inicie sesión.");
+}
 
+// Obtener préstamos filtrados por el usuario autenticado
+$prestamos = getPrestamos($connection, $_SESSION['user-id']);
 if ($prestamos === false) {
     $prestamos = [];
 }
-
-
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,7 +54,7 @@ if ($prestamos === false) {
     </div>
     <br>
     <header class="encabezado-wrapper my-5">
-    <a href="../forms/form-select_type.php" class="button-return" aria-label="Volver">
+    <a href="../forms/form-auto-select_type.php" class="button-return" aria-label="Volver">
         <img src="../../resources/images/icon-return.png" alt="">
     </a>
 
@@ -138,7 +139,7 @@ if ($prestamos === false) {
 
                 /* ============================================================
                     Edición (sin cambios)
-                ============================================================ 
+                ============================================================ */
                 $(document).on('click', '.edit', function() {
                     var row = $(this).closest('tr');
                     row.find('.editable').attr('contenteditable', 'true').focus();
@@ -188,7 +189,7 @@ if ($prestamos === false) {
 
                 /* ============================================================
                     Eliminación (sin cambios)
-                ============================================================ 
+                ============================================================ */
                 $(document).on('click', '.delete', function() {
                     var id  = $(this).data('id');
                     var row = $(this).closest('tr');
@@ -213,7 +214,6 @@ if ($prestamos === false) {
                         }
                     });
                 });
-                */
 
                 // Filtros y paginación
                 function paginateTable(rows){
