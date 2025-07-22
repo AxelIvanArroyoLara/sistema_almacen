@@ -204,6 +204,7 @@
 #btn-equipos{background:#0048ff;}
 #btn-conexiones{background:#26ac2f;}
 #btn-chips{background:#ffbb00;}
+#btn-prestamos{background: #ff3b3f;}
 @media(max-width:767px){
     .card-option img{max-height:120px;}
 }

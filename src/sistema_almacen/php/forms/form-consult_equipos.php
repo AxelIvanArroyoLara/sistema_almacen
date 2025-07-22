@@ -180,8 +180,8 @@ if (isset($_GET['numero_ser'])) {
                             $('#message').text('Cambios guardados correctamente').fadeIn();
                             row.find('.editable').attr('contenteditable', 'false');
                             row.find('.save').removeClass('save btn-success')
-                                             .addClass('edit btn-primary')
-                                             .text('Editar');
+                                            .addClass('edit btn-primary')
+                                            .text('Editar');
                             setTimeout(function(){ $('#message').fadeOut(); }, 3000);
                         } else {
                             $('#message').html('<div class="alert alert-danger">' + resp + '</div>');

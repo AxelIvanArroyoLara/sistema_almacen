@@ -41,30 +41,42 @@
                 <p>Por favor, seleccione una de las siguientes opciones:</p>
             </div>
         </div>
-
+        <br>
+        <br>
+        <br>
         <!-- Opciones -->
         <div class="row justify-content-center mt-4">
-            <div class="col-sm-10 col-md-4 mb-4">
+            <div class="col-sm-10 col-md-3 mb-4">
                 <a href="form-consult_equipos.php" class="card-option" id="btn-equipos">
                     <img src="../../resources/images/icon-equipos.png" alt="Equipos">
                     <h3>Equipos</h3>
                 </a>
             </div>
-            <div class="col-sm-10 col-md-4 mb-4">
+            <div class="col-sm-10 col-md-3 mb-4">
                 <a href="form-consult_conexiones.php" class="card-option" id="btn-conexiones">
                     <img src="../../resources/images/icon-conexiones.png" alt="Conexiones">
                     <h3>Conexiones</h3>
                 </a>
             </div>
-            <div class="col-sm-10 col-md-4 mb-4">
+            <div class="col-sm-10 col-md-3 mb-4">
                 <a href="form-consult_chips.php" class="card-option" id="btn-chips">
                     <img src="../../resources/images/icon-chips.png" alt="Chips">
                     <h3>Chips</h3>
                 </a>
             </div>
+            <div class="col-sm-10 col-md-3 mb-4">
+                <a href="form-consult_prestamos.php" class="card-option" id="btn-prestamos">
+                    <img src="../../resources/images/icon-prestamo.png" alt="Préstamos">
+                    <h3>Préstamos</h3>
+                </a>
+            </div>
         </div>
     </div>
-
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
     <!-- Footer -->
     <footer class="mt-5 text-center">
         <p>© 2024 Departamento de Electrónica - UDLAP</p>
