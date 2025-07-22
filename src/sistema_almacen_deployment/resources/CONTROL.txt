@@ -1,0 +1,1788 @@
+
+store .T. to  sigue
+set escape on
+set console off
+VEZ = 1
+do while sigue
+
+   clear
+   numpar = SPACE(11)
+   almacen = SPACE(7)
+   solicitante = SPACE(7)
+   movimiento = SPACE(1)
+   cuantos = SPACE(2)
+   semestre = SPACE(2)
+   Y = 0
+   @  1,  8  TO  4, 66
+   @  2, 10  SAY "     P R E S T A M O   A U T O M A T I C O   D E *"
+   @  3, 10  SAY "E Q U I P O,  C O M P O N E N T E S  Y  M A N U A L E S"
+   @ 24, 1 SAY "*ELS V06.0  SISTEMA AL 11 DE MAYO DE 2009*"
+
+   @  6,  5  SAY "USUARIO:"
+   @  6, 28  GET solicitante
+   READ
+   SET COLOR TO N+/W+
+   @ 6, 28 SAY "*******"
+   SET COLOR TO W+/B
+
+   longi = LEN(TRIM(solicitante))
+
+   do while longi <> 6
+      @  6,  5  SAY "USUARIO:"
+      @  6, 28  GET solicitante
+      READ
+      longi = LEN(TRIM(solicitante))
+   enddo
+
+   solicitante = TRIM(solicitante)
+   IF solicitante = "000031"
+      close all
+*      DO BCMENU
+      set escape oFF
+*      QUIT
+      return
+   ENDIF
+
+   solicitante = TRIM(solicitante)
+   IF solicitante = "@ACTCO"
+      DO ACTCO
+      RETURN
+   ENDIF
+
+* IF LEFT(solicitante,1 <> "@")
+*                                        -------------------------------------- anexo ene12/04
+   @  6, 45  SAY "ENCARGADO ALMACEN:"
+   @  6, 68  GET almacen
+   READ
+   SET COLOR TO N+/W+
+   @ 6, 68 SAY "*******"
+   SET COLOR TO W+/B
+   longi = LEN(TRIM(almacen))
+   do while longi < 5
+      @  6, 45  SAY "ENCARGADO ALMACEN:"
+      @  6, 68  GET almacen
+      read
+      SET COLOR TO N+/W+
+      @ 6, 68 SAY "*******"
+      SET COLOR TO W+/B
+      longi = LEN(TRIM(almacen))
+   enddo
+   almacen = TRIM(almacen)
+
+   valido = 1
+   error = 0
+   use EMPLEADOS index EMPNUM
+   go top
+   valido = 0
+   find &almacen
+   IF FOUND()
+      valido = 1
+   ENDIF
+   close database
+   IF valido = 0
+      @ 12, 20 SAY "El encargado no se encuentra registrado!"
+      error = 1
+      close all
+   ENDIF
+   IF valido = 1
+       use USUARIOS index BCNUMERO
+       go top
+       valido = 0
+       find &solicitante
+       IF FOUND()
+          valido = 1
+          usua = NOMBRE
+          stat = STATUS
+      ENDIF
+      close database
+      IF valido = 0
+         @ 12, 20 SAY "El estudiante no se encuentra registrado!"
+         error = 1
+         close all
+      endif
+      IF valido = 1
+         IF stat = "INACT"
+            @ 12, 20 SAY "Estudiante con PROBLEMAS!, consultar con el encargado."
+            valido = 0
+            error = 1
+            close all
+         ENDIF
+      ENDIF
+   ENDIF
+   IF error = 0
+      @  8,  4  SAY "* * * * *   Atendiendo a: " + solicitante + "  "+ usua + "   * * * * * "
+      @ 10,  5  SAY "PARTE SOLICITADA:"
+      @ 10, 25  GET numpar
+      read
+
+
+      longi = LEN(TRIM(numpar))
+      do while longi < 3
+         @ 10,  5  SAY "PARTE SOLICITADA:"
+         @ 10, 25  GET numpar
+         read
+         longi = LEN(TRIM(numpar))
+      enddo
+      numpar = UPPER(TRIM(numpar))
+
+
+
+      IF numpar = "FIN"
+         valido = 0
+      ELSE
+         @ 10, 45  SAY "MOVIMIENTO:"
+         @ 10, 68  GET movimiento
+         READ
+         longi = LEN(TRIM(movimiento))
+         do while longi < 1
+            @ 10, 45  SAY "MOVIMIENTO:"
+            @ 10, 68  GET movimiento
+            READ
+            longi = LEN(TRIM(movimiento))
+         enddo
+         movimiento = UPPER(TRIM(movimiento))
+      ENDIF
+   ENDIF
+
+   IF valido = 1
+      vez = 1
+                                  * DO PARA EL CICLO DE ATENDIENDO A *
+      DO WHILE numpar <> "FIN"
+         IF vez <> 1
+               clear
+               numpar = SPACE(11)
+               movimiento = SPACE(1)
+               cuantos = SPACE(2)
+               @  1,  8  TO  4, 66
+               @  2, 10  SAY "     P R E S T A M O   A U T O M A T I C O   D E *"
+               @  3, 10  SAY "E Q U I P O,  C O M P O N E N T E S  Y  M A N U A L E S"
+               @ 24, 1 SAY "*ELS V06.0  SISTEMA AL 11 DE MAYO DE 2009*"
+               @  8, 10  SAY "* * * * *   Atendiendo a: " + usua + "   * * * * * "
+               @ 10,  5  SAY "PARTE SOLICITADA:"
+               @ 10, 25  GET numpar
+               read
+
+               error = 0
+               longi = LEN(TRIM(numpar))
+               do while longi < 3
+                  @ 10,  5  SAY "PARTE SOLICITADA:"
+                  @ 10, 25  GET numpar
+                  read
+                  longi = LEN(TRIM(numpar))
+               enddo
+               numpar = UPPER(TRIM(numpar))
+
+               IF numpar <> "FIN"
+                  @ 10, 45  SAY "MOVIMIENTO:"
+                  @ 10, 68  GET movimiento
+                  READ
+                  longi = LEN(TRIM(movimiento))
+                  do while longi < 1
+                     @ 10, 45  SAY "MOVIMIENTO:"
+                     @ 10, 68  GET movimiento
+                     READ
+                     longi = LEN(TRIM(movimiento))
+                  enddo
+                  movimiento = UPPER(TRIM(movimiento))
+               ENDIF
+         ENDIF
+   almacen = SPACE(7)
+                                **************** conversion hora *******
+   inicio = LEFT(TIME(),5)
+   horaini = LEFT(inicio,2)
+   minini = RIGHT(inicio,2)
+   dechoraini = LEFT(horaini,1)
+   unihoraini = RIGHT(horaini,1)
+   decminini = LEFT(minini,1)
+   uniminini = RIGHT(minini,1)
+   var = 1
+   hor = 0
+   DO WHILE var <> 5
+      DO CASE var
+         CASE var = 1
+            conv =dechoraini
+         CASE var = 2
+            conv =unihoraini
+         CASE var = 3
+            conv =decminini
+         CASE var = 4
+            conv =uniminini
+      ENDCASE
+      var = var + 1
+      DO CASE conv
+         CASE conv = "1"
+            store 1 to conv
+         CASE conv = "2"
+            store 2 to conv
+         CASE conv = "3"
+            store 3 to conv
+         CASE conv = "4"
+            store 4 to conv
+         CASE conv = "5"
+            store 5 to conv
+         CASE conv = "6"
+            store 6 to conv
+         CASE conv = "7"
+            store 7 to conv
+         CASE conv = "8"
+            store 8 to conv
+         CASE conv = "9"
+            store 9 to conv
+         CASE conv = "0"
+            store 0 to conv
+      ENDCASE
+      hor = (hor * 10) + conv * 10
+   ENDDO
+   hor = hor / 10
+   cual = UPPER(LEFT(numpar,1))
+   DO CASE cual
+      CASE cual = "X"
+                     *************** CONTROL DE CONEXIONES **********
+    		IF NUMPAR = "XCONEX"
+		   CLEAR
+		   DO BCDEUXU
+		ELSE
+		   cuantos = "1"
+               cuantos1 = "2"
+               do while cuantos <> cuantos1
+                  @ 12,  5 SAY "CANTIDAD:"
+                  @ 12, 28 GET cuantos picture "9"
+                  READ
+                  do while cuantos = "0"
+                     @ 12,  5  SAY "CANTIDAD:"
+                     @ 12, 28  GET cuantos picture "9"
+                     READ
+                  Enddo
+                  
+                  @ 13,  5 SAY "RATIFICA LA CANTIDAD:"
+                  @ 13, 28 GET cuantos1 picture "9"
+                  READ
+                  do while cuantos = "0"
+                     @ 13,  5  SAY "RATIFICA LA CANTIDAD:"
+                     @ 13, 28  GET cuantos1 picture "9"
+                    READ
+                  enddo
+                  IF cuantos <> cuantos1
+                     @ 15, 1 SAY "LAS CANTIDADES NO CONCUERDAN!SOLICITA DE NUEVO"
+                     WAIT "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+                     @ 15, 1 SAY "                                              "
+                     @ 16, 0 SAY "                                              "
+                     cuantos = "1"
+                     cuantos1 = "2"
+                  ENDIF
+               enddo
+            ENDIF
+            
+            IF LEFT(numpar,1) = "X" .OR. LEFT(numpar,1) = "x"     
+                                                                  *** DE A *****
+               res = right(numpar,4)
+               IF RES <> "OHMP"
+                  if left(res,3) = "OHM"
+                     numpar = left(numpar,9)
+                  endif
+               ENDIF
+               
+               longi = LEN(numpar)
+               compo = numpar
+               numpar = RIGHT(numpar, longi - 1)
+               numpar = trim(numpar)
+               MOVIMIENTO = UPPER(MOVIMIENTO)
+               use CONEXION index BCPOSIX 
+               go top
+               find &numpar
+               
+               IF FOUND()                         
+                                                  ********* DE FOUND   *********
+                  EXIST = EXISTENCIA
+                  CLOSE DATABASE
+                  
+                  
+                  
+                  IF movimiento = "E"
+*                     USE OTONO04 INDEX BCOTO04, BCHORO04
+*		     USE VER05 INDEX BCVER05, BCHORV05
+*                    USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		     USE VER06 INDEX BCVER06, BCHORV06
+*		     USE OTONO07 INDEX BCOTO07, BCHORO07
+*		     USE PRIM07 INDEX BCPRIM07, BCHORP07
+*   		     USE VER07 INDEX BCVER07, BCHORV07
+*		     USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                    USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+
+                     APPEND BLANK
+                     NUEVO = RECNO()
+                     REPLACE REAL WITH &CUANTOS
+                     REPLACE NUMERO WITH solicitante
+                     REPLACE NOMBRE WITH LEFT(usua,10)
+                     REPLACE NOMPAR WITH compo
+                     REPLACE TIPMOV WITH LEFT(movimiento,1)
+                     REPLACE FECHA WITH DATE()
+                     REPLACE HORA WITH hor
+                     REPLACE ENCARGADO WITH LEFT(almacen,2)
+                     REPLACE CANT0MULTA WITH - &cuantos
+                     REPLACE DEUDOR WITH 1
+                     GO TOP
+                     GOTO NUEVO
+                     SKIP -1
+                     DO WHILE (NOMPAR = COMPO) .AND. (NUMERO = SOLICITANTE)
+                        SKIP -1
+                     ENDDO
+                     SKIP
+                     PRIMERO = RECNO()
+                     
+                     IF PRIMERO = NUEVO
+                        set color to W+/R+
+                        @ 15, 18  TO  18, 62
+                        @ 16, 19 SAY "                                           "
+                        @ 16, 26 SAY "NO DEBES LA     CONEXION: "
+                        @ 16, 52 SAY COMPO
+                        @ 17, 19 SAY "                                           "
+                        @ 17, 26 SAY "RECTIFICA POR FAVOR."
+                        error = 1
+                        GOTO NUEVO
+                        DELETE
+                        PACK
+                        CLOSE DATABASE
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                        DO WHILE CONTAD <> "*5"
+                           CONTAD = SPACE(2)
+                           @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                           @ 20, 60  GET CONTAD picture "!!"
+                           READ 
+                        ENDDO
+                     ELSE
+                        GOTO PRIMERO
+                        DEBE = REAL - &CUANTOS
+                        IF (DEBE > 0) .OR. (DEBE = 0)
+                           DO WHILE RECNO() <> NUEVO
+                              REPLACE REAL WITH DEBE
+                              SKIP
+                           ENDDO
+                           GOTO NUEVO
+                           REPLACE REAL WITH DEBE
+                           CLOSE DATABASE
+                           use CONEXION index BCPOSIX 
+                           go top
+                           find &numpar
+                           REPLACE EXISTENCIA WITH (EXISTENCIA + &CUANTOS)
+                           CLOSE DATABASE
+*******
+                        ELSE
+                           GOTO NUEVO
+                           DELETE
+                           PACK
+                           GOTO PRIMERO
+                           IF REAL = 0
+                              set color to W+/R+
+                              @ 15, 18  TO  18, 62
+                              @ 16, 19 SAY "                                           "
+                              @ 16, 26 SAY "NO DEBES LA     CONEXION: "
+                              @ 16, 52 SAY COMPO
+                              @ 17, 19 SAY "                                           "
+                              @ 17, 26 SAY "RECTIFICA POR FAVOR."
+                              CLOSE DATABASE 
+                              error = 1
+                              CONTAD = SPACE(2)
+                              @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                              @ 20, 60  GET CONTAD picture "!!"
+                              READ 
+                              DO WHILE CONTAD <> "*5"
+                                 CONTAD = SPACE(2)
+                                 @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                                 @ 20, 60  GET CONTAD picture "!!"
+                                 READ 
+                              ENDDO
+                           ELSE
+                              set color to W+/R+
+                              @ 15, 18  TO  18, 62
+                              @ 16, 19 SAY "                                           "
+                              @ 16, 26 SAY "NO DEBES LA CANTIDAD: "
+                              @ 16, 52 SAY &CUANTOS
+                              @ 17, 19 SAY "                                           "
+                              @ 17, 26 SAY "RECTIFICA, SOLO DEBES: "
+                              @ 17, 52 SAY REAL
+                              CLOSE DATABASE 
+                              error = 1
+                              CONTAD = SPACE(2)
+                              @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                              @ 20, 60  GET CONTAD picture "!!"
+                              READ 
+                              DO WHILE CONTAD <> "*5"
+                                 CONTAD = SPACE(2)
+                                 @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                                 @ 20, 60  GET CONTAD picture "!!"
+                                 READ 
+                              ENDDO 
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                     CLOSE DATABASE
+
+                  ENDIF
+                  
+                  QUEDAN = EXIST - &CUANTOS 
+                  IF (movimiento = "S") .AND. (QUEDAN > 0 .OR. QUEDAN = 0)
+*                     USE OTONO04 INDEX BCOTO04, BCHORO04
+*		     USE VER05 INDEX BCVER05, BCHORV05
+*                    USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		    USE VER06 INDEX BCVER06, BCHORV06
+*		     USE OTONO06 INDEX BCOTO06, BCHORO06
+*		     USE PRIM07 INDEX BCPRIM07, BCHORP07
+*		    USE VER07 INDEX BCVER07, BCHORV07
+*		     USE OTONO07 INDEX BCOTO07, BCHORO07
+*		     USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                    USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                     APPEND BLANK
+                     NUEVO = RECNO()
+                     REPLACE REAL WITH &CUANTOS
+                     REPLACE NUMERO WITH solicitante
+                     REPLACE NOMBRE WITH LEFT(usua,10)
+                     REPLACE NOMPAR WITH compo
+                     REPLACE TIPMOV WITH LEFT(movimiento,1)
+                     REPLACE FECHA WITH DATE()
+                     REPLACE HORA WITH hor
+                     REPLACE ENCARGADO WITH LEFT(almacen,2)
+                     REPLACE CANT0MULTA WITH &cuantos
+                     REPLACE DEUDOR WITH 1
+                     GO TOP
+                     GOTO NUEVO
+                     SKIP -1
+                     DO WHILE (NOMPAR = COMPO) .AND. (NUMERO = SOLICITANTE)
+                        SKIP -1
+                     ENDDO
+                     SKIP
+                     PRIMERO = RECNO()
+                     IF PRIMERO <> NUEVO
+                        GOTO PRIMERO
+                        DEBE = REAL + &CUANTOS
+                        DO WHILE RECNO() <> NUEVO
+                           REPLACE REAL WITH DEBE
+                           SKIP
+                        ENDDO
+                        GOTO NUEVO
+                        REPLACE REAL WITH DEBE
+                     ENDIF
+                     CLOSE DATABASE
+                     use CONEXION index BCPOSIX 
+                     go top
+                     find &numpar
+                     REPLACE EXISTENCIA WITH (EXISTENCIA - &CUANTOS)
+                     CLOSE DATABASE 
+                  ELSE
+                     IF MOVIMIENTO <> "E"
+                        set color to W+/R+
+                        @ 15, 18  TO  18, 62
+
+                        @ 16, 19 SAY "                                           "
+                        @ 17, 19 SAY "                                           "
+                        @ 16, 51 SAY EXIST
+                        @ 16, 26 SAY "No hay suficientes, hay "
+                        error = 1
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                        DO WHILE CONTAD <> "*5"
+                           CONTAD = SPACE(2)
+                           @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                           @ 20, 60  GET CONTAD picture "!!"
+                           READ 
+                        ENDDO 
+                     ENDIF
+                  ENDIF                                      
+                        
+                  IF MOVIMIENTO <> "S"
+                     IF MOVIMIENTO <> "E"
+                        @ 15, 40 SAY "Tipo de movimiento NO VALIDO!"
+                        error = 1
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                        DO WHILE CONTAD <> "*5"
+                           CONTAD = SPACE(2)
+                           @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                           @ 20, 60  GET CONTAD picture "!!"
+                           READ 
+                        ENDDO 
+                     ENDIF
+                  ENDIF
+               ELSE                               
+                                                  ********* DE FOUND   *********
+                  IF NUMPAR <> "CONEX"
+                     set color to W+/R+
+                     @ 15,20 SAY "No se Encontraron conexiones con ese nombre"
+                     CLOSE DATABASE 
+                     error = 1
+                     CONTAD = SPACE(2)
+                     @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                     @ 20,60  GET CONTAD picture "!!"
+                     READ 
+                     DO WHILE CONTAD <> "*5"
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                     ENDDO 
+                  ENDIF
+               ENDIF                              
+                                                  ********* DE FOUND   *********
+                                         
+            ENDIF                                 
+                                                                  *** DE A *****
+                      
+      CASE cual = "C"
+                     ***********  CONTROL DE COMPONENTES ***********
+    		IF NUMPAR = "CHIPS"
+
+
+********************************************************************************
+********************************************************************************
+********************************************************************************
+
+                @  12, 5  SAY "(P) PRIMAVERA 09"
+                @  13, 5  SAY "(O)     OTONO 08"
+                @  12, 23  GET semestre
+                READ
+                longi = LEN(TRIM(semestre))
+                do while longi < 1
+                   semestre = SPACE(2)
+                   @  12, 5  SAY "(1) PRIMAVERA 09"
+                   @  13, 5  SAY "(2)      OTOÑO08"
+                   @  12, 23  GET semestre
+                   READ
+                   longi = LEN(TRIM(almacen))
+                enddo
+                semestre = upper(TRIM(semestre))
+
+
+
+********************************************************************************
+********************************************************************************
+********************************************************************************
+
+		   CLEAR
+
+		   if(semestre = "P")
+                      DO BCDEUCOU
+		   endif
+
+		   if(semestre = "O")
+                      DO BCDEUCOO
+		   endif
+               FLAG = 1
+		ELSE
+		   cuantos = "1"
+               cuantos1 = "2"
+               do while cuantos <> cuantos1
+                  @ 12,  5 SAY "CANTIDAD:"
+                  @ 12, 28 GET cuantos picture "9"
+                  READ
+                  do while cuantos = "0"
+                     @ 12,  5  SAY "CANTIDAD:"
+                     @ 12, 28  GET cuantos picture "9"
+                     READ
+                  Enddo
+                  
+                  @ 13,  5 SAY "RATIFICA LA CANTIDAD:"
+                  @ 13, 28 GET cuantos1 picture "9"
+                  READ
+                  do while cuantos = "0"
+                     @ 13,  5  SAY "RATIFICA LA CANTIDAD:"
+                     @ 13, 28  GET cuantos1 picture "9"
+                    READ
+                  enddo
+                  IF cuantos <> cuantos1
+                     @ 15, 1 SAY "LAS CANTIDADES NO CONCUERDAN!SOLICITA DE NUEVO"
+                     WAIT "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+                     @ 15, 1 SAY "                                              "
+                     @ 16, 0 SAY "                                              "
+                     cuantos = "1"
+                     cuantos1 = "2"
+                  ENDIF
+               enddo
+            ENDIF
+            
+            IF LEFT(numpar,1) = "C" .OR. LEFT(numpar,1) = "c"     
+                                                                  *** DE A *****
+               res = right(numpar,4)
+               IF RES <> "OHMP"
+                  if left(res,3) = "OHM"
+                     numpar = left(numpar,9)
+                  endif
+               ENDIF
+               
+               longi = LEN(numpar)
+               compo = numpar
+               numpar = RIGHT(numpar, longi - 1)
+               numpar = trim(numpar)
+               MOVIMIENTO = UPPER(MOVIMIENTO)
+               use CHIPS index BCPOSICO
+               go top
+               find &numpar
+               
+               IF FOUND()                         
+                                                  ********* DE FOUND   *********
+                  EXIST = EXISTENCIA
+                  CLOSE DATABASE
+                  
+                  
+                  
+                  IF movimiento = "E"
+*                     USE OTONO04 INDEX BCOTO04, BCHORO04
+*		     USE VER05 INDEX BCVER05, BCHORV05
+*                    USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		     USE VER06 INDEX BCVER06, BCHORV06
+*		     USE OTONO06 INDEX BCOTO06, BCHORO06
+*		     USE PRIM07 INDEX BCPRIM07, BCHORP07
+*		     USE VER07 INDEX BCVER07, BCHORV07
+*		     USE OTONO07 INDEX BCOTO07, BCHORO07
+*		     USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                    USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                     APPEND BLANK
+                     NUEVO = RECNO()
+                     REPLACE REAL WITH &CUANTOS
+                     REPLACE NUMERO WITH solicitante
+                     REPLACE NOMBRE WITH LEFT(usua,10)
+                     REPLACE NOMPAR WITH compo
+                     REPLACE TIPMOV WITH LEFT(movimiento,1)
+                     REPLACE FECHA WITH DATE()
+                     REPLACE HORA WITH hor
+                     REPLACE ENCARGADO WITH LEFT(almacen,2)
+                     REPLACE CANT0MULTA WITH - &cuantos
+                     REPLACE DEUDOR WITH 1
+                     GO TOP
+                     GOTO NUEVO
+                     SKIP -1
+                     DO WHILE (NOMPAR = COMPO) .AND. (NUMERO = SOLICITANTE)
+                        SKIP -1
+                     ENDDO
+                     SKIP
+                     PRIMERO = RECNO()
+
+                     IF PRIMERO = NUEVO
+                        set color to W+/R+
+                        @ 15, 18  TO  18, 62
+                        @ 16, 19 SAY "                                           "
+                        @ 16, 26 SAY "NO DEBES EL COMPONENTE: "
+                        @ 16, 52 SAY COMPO
+                        @ 17, 19 SAY "                                           "
+                        @ 17, 26 SAY "RECTIFICA POR FAVOR."
+                        error = 1
+                        GOTO NUEVO
+                        DELETE
+                        PACK
+                        CLOSE DATABASE
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                        DO WHILE CONTAD <> "*5"
+                           CONTAD = SPACE(2)
+                           @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                           @ 20, 60  GET CONTAD picture "!!"
+                           READ 
+                        ENDDO
+                     ELSE
+                        GOTO PRIMERO
+                        DEBE = REAL - &CUANTOS
+                        IF (DEBE > 0) .OR. (DEBE = 0)
+                           DO WHILE RECNO() <> NUEVO
+                              REPLACE REAL WITH DEBE
+                              SKIP
+                           ENDDO
+                           GOTO NUEVO
+                           REPLACE REAL WITH DEBE
+                           CLOSE DATABASE
+                           use CHIPS index BCPOSICO
+                           go top
+                           find &numpar
+                           REPLACE EXISTENCIA WITH (EXISTENCIA + &CUANTOS)
+                           CLOSE DATABASE
+*******
+                        ELSE
+                           GOTO NUEVO
+                           DELETE
+                           PACK
+                           GOTO PRIMERO
+                           IF REAL = 0
+                              set color to W+/R+
+                              @ 15, 18  TO  18, 62
+                              @ 16, 19 SAY "                                           "
+                              @ 16, 26 SAY "NO DEBES EL COMPONENTE: "
+                              @ 16, 52 SAY COMPO
+                              @ 17, 19 SAY "                                           "
+                              @ 17, 26 SAY "RECTIFICA POR FAVOR."
+                              CLOSE DATABASE 
+                              error = 1
+                              CONTAD = SPACE(2)
+                              @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                              @ 20, 60  GET CONTAD picture "!!"
+                              READ 
+                              DO WHILE CONTAD <> "*5"
+                                 CONTAD = SPACE(2)
+                                 @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                                 @ 20, 60  GET CONTAD picture "!!"
+                                 READ 
+                              ENDDO
+                           ELSE
+                              set color to W+/R+
+                              @ 15, 18  TO  18, 62
+                              @ 16, 19 SAY "                                           "
+                              @ 16, 26 SAY "NO DEBES LA CANTIDAD: "
+                              @ 16, 52 SAY &CUANTOS
+                              @ 17, 19 SAY "                                           "
+                              @ 17, 26 SAY "RECTIFICA, SOLO DEBES: "
+                              @ 17, 52 SAY REAL
+                              CLOSE DATABASE 
+                              error = 1
+                              CONTAD = SPACE(2)
+                              @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                              @ 20, 60  GET CONTAD picture "!!"
+                              READ 
+                              DO WHILE CONTAD <> "*5"
+                                 CONTAD = SPACE(2)
+                                 @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                                 @ 20, 60  GET CONTAD picture "!!"
+                                 READ 
+                              ENDDO 
+                           ENDIF
+                        ENDIF
+                     ENDIF
+                     CLOSE DATABASE
+
+                  ENDIF
+
+
+
+
+
+
+                  QUEDAN = EXIST - &CUANTOS 
+                  IF (movimiento = "S") .AND. (QUEDAN > 0 .OR. QUEDAN = 0)
+*                     USE OTONO04 INDEX BCOTO04, BCHORO04
+*		     USE VER05 INDEX BCVER05, BCHORV05
+*                    USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		     USE VER06 INDEX BCVER06, BCHORV06
+*		     USE OTONO06 INDEX BCOTO06, BCHORO06
+*		     USE PRIM07 INDEX BCPRIM07, BCHORP07
+*		    USE VER07 INDEX BCVER07, BCHORV07
+*		     USE OTONO07 INDEX BCOTO07, BCHORO07
+*		     USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                    USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                     APPEND BLANK
+                     NUEVO = RECNO()
+                     REPLACE REAL WITH &CUANTOS
+                     REPLACE NUMERO WITH solicitante
+                     REPLACE NOMBRE WITH LEFT(usua,10)
+                     REPLACE NOMPAR WITH compo
+                     REPLACE TIPMOV WITH LEFT(movimiento,1)
+                     REPLACE FECHA WITH DATE()
+                     REPLACE HORA WITH hor
+                     REPLACE ENCARGADO WITH LEFT(almacen,2)
+                     REPLACE CANT0MULTA WITH &cuantos
+                     REPLACE DEUDOR WITH 1
+                     GO TOP
+                     GOTO NUEVO
+                     SKIP -1
+                     DO WHILE (NOMPAR = COMPO) .AND. (NUMERO = SOLICITANTE)
+                        SKIP -1
+                     ENDDO
+                     SKIP
+                     PRIMERO = RECNO()
+                     IF PRIMERO <> NUEVO
+                        GOTO PRIMERO
+                        DEBE = REAL + &CUANTOS
+                        DO WHILE RECNO() <> NUEVO
+                           REPLACE REAL WITH DEBE
+                           SKIP
+                        ENDDO
+                        GOTO NUEVO
+                        REPLACE REAL WITH DEBE
+                     ENDIF
+                     CLOSE DATABASE
+                     use CHIPS index BCPOSICO
+                     go top
+                     find &numpar
+                     REPLACE EXISTENCIA WITH (EXISTENCIA - &CUANTOS)
+                     CLOSE DATABASE 
+                  ELSE
+                     IF MOVIMIENTO <> "E"
+                        set color to W+/R+
+                        @ 15, 18  TO  18, 62
+
+                        @ 16, 19 SAY "                                           "
+                        @ 17, 19 SAY "                                           "
+                        @ 16, 51 SAY EXIST
+                        @ 16, 26 SAY "No hay suficientes, hay "
+                        error = 1
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                        DO WHILE CONTAD <> "*5"
+                           CONTAD = SPACE(2)
+                           @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                           @ 20, 60  GET CONTAD picture "!!"
+                           READ 
+                        ENDDO 
+                     ENDIF
+                  ENDIF                                      
+                        
+                  IF MOVIMIENTO <> "S"
+                     IF MOVIMIENTO <> "E"
+                        @ 15, 40 SAY "Tipo de movimiento NO VALIDO!"
+                        error = 1
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                        DO WHILE CONTAD <> "*5"
+                           CONTAD = SPACE(2)
+                           @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                           @ 20, 60  GET CONTAD picture "!!"
+                           READ 
+                        ENDDO 
+                     ENDIF
+                  ENDIF
+               ELSE                               
+                                                  ********* DE FOUND   *********
+                  set color to W+/R+
+                  IF NUMPAR <> "HIPS"
+                     @ 15,20 SAY "No se Encontraron partes con ese nombre"
+                     error = 1
+                     CLOSE DATABASE 
+                     CONTAD = SPACE(2)
+                     @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                     @ 20,60  GET CONTAD picture "!!"
+                     READ 
+                     DO WHILE CONTAD <> "*5"
+                        CONTAD = SPACE(2)
+                        @ 20, 20 SAY "PRESIONE * Y DESPUES 5 PARA CONTINUAR"
+                        @ 20, 60  GET CONTAD picture "!!"
+                        READ 
+                     ENDDO 
+                  ENDIF
+               ENDIF                              
+                                                  ********* DE FOUND   *********
+                           
+                           
+                           
+                           
+                           
+                           
+                                         
+            ENDIF                                 
+                                                                  *** DE A *****
+
+
+
+
+
+
+
+
+      CASE cual = "M"
+                    ****************** CONTROL DE MANUALES  *********
+         use manual index bcposim
+         go top
+         IF NUMPAR = "MANUALES"
+            I = 5
+            @  0,  0 CLEAR
+            @  1,  4 TO 3, 75
+            @  2, 20 SAY "M A N U A L E S     P R E S T A D O S    A    " + SOLICITANTE
+            @  4,  1 SAY "   FECHA_SOL  POSICION              NOMBRE                  MARCA           S C"
+            DO WHILE .NOT. EOF()
+               IF ENCARGADOM = SOLICITANTE
+                  IF STATUSM = "A" .AND. CHKM = "I"
+
+                     @  I,  4 SAY FECHA_SOL
+                     @  I, 15 SAY POSICIONM + " " + LEFT(NOMBRE,34) + " " +  LEFT(MARCA,15) + " " + STATUSM + " " + CHKM
+                     I = I + 1
+                     IF I > 22
+                        @ I + 1, 5 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+                        WAIT
+                        I = 5
+;                        @  0,  0 CLEAR
+                        @  1,  4 TO 3, 75
+                        @  2, 20 SAY "M A N U A L E S     P R E S T A D O S    A    " + SOLICITANTE
+                        @  4,  1 SAY "   FECHA_SOL  POSICION              NOMBRE                  MARCA           S C"
+                     ENDIF
+                  ENDIF
+               ENDIF
+               SKIP
+            ENDDO
+            @ I + 1, 5 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+            WAIT
+         ENDIF
+         CLOSE DATABASE
+*****************++++++++++++++++---------
+
+         IF NUMPAR = "MULTAS"
+*            USE OTONO99 INDEX BCOTO99, BCHORO99
+*            use DPRIM04 INDEX BDPRIM04,BDHORP04
+*            use ver03 index bcver03, bchorv03
+*            USE OTONO04 INDEX BCOTO04, BCHORO04
+*	     USE VER05 INDEX BCVER05, BCHORV05
+*            use ver99 index bcver99, bchorv99
+*            USE VER04 INDEX BCVER04, BCHORV04
+*            USE PRIM06 INDEX BCPRIM06, BCHORP06
+*	     USE VER06 INDEX BCVER06, BCHORV06
+*	     USE OTONO06 INDEX BCOTO06, BCHORO06
+*	     USE PRIM07 INDEX BCPRIM07, BCHORP07
+*	     USE VER07 INDEX BCVER07, BCHORV07
+*	     USE OTONO07 INDEX BCOTO07, BCHORO07
+*	     USE PRIM08 INDEX BCPRIM08, BCHORP08
+*            USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+            FIND &SOLICITANTE
+            I = 5
+         *   IF FOUND()
+               @  0,  0 CLEAR
+               @  1,  4 TO 3, 75
+               @  2, 20 SAY "M U L T A S     D E     M A N U A L E S"
+               @  4,  1 SAY "    MANUAL     FECHA_ENT  HORA_ENT  HORAS DE MULTA"
+               DO WHILE NUMERO = SOLICITANTE
+                  IF LEFT(NOMPAR,1) = "M" .AND. CANT0MULTA <> 0
+                     @ I,  5 SAY NOMPAR +" "
+                     @ I, 16 SAY FECHA
+                     @ I, 29 SAY HORA
+                     @ I, 41 SAY CANT0MULTA
+                     I = I + 1
+                    SKIP
+                     IF I > 22
+                        @ I + 1, 5 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+                        WAIT
+                        I = 5
+                        @  0,  0 CLEAR
+                        @  1,  4 TO 3, 75
+                        @  2, 20 SAY "M U L T A S     D E     M A N U A L E S"
+                        @  4,  1 SAY "    MANUAL     FECHA_ENT  HORA_ENT  HORAS DE MULTA"
+                     ENDIF
+                 * ELSE
+                 *    @ I + 2,  5 SAY "NO SE ENCONTRARON MULTAS"
+                 ? NUMERO
+                  ENDIF
+                  SKIP
+               ENDDO
+            *ELSE
+            *   @ I + 2,  5 SAY "NO SE ENCONTRARON USUARIOS CON ESE NUMERO, FAVOR DE CONSULTAR"
+            *ENDIF
+            @ I + 1, 5 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+            WAIT
+         ENDIF
+
+
+*****************++++++++++++++++----------
+
+
+******************************/////
+         use manual index bcposim
+         go top
+         find &numpar
+         IF found()
+*******************************//////
+
+            IF movimiento = "E"
+               IF STATUSM = "A"
+                  REPLACE STATUSM WITH  "P"
+                  replace encargadom with solicitante
+                  REPLACE FECHA_SOL WITH DATE()
+                  fech = DATE()
+                  multas = 0
+                  apar = posicionm + " "+ NOMBRE
+                  close database
+*                  use VER99 INDEX BCHORV99, BCVER99
+*                  USE VER98 INDEX BCHORV98, BCVER98 
+*                  use OTONO99 INDEX BCOTO99, BCHORO99
+*                  use DPRIM04 INDEX BDPRIM04,BDHORP04
+*                  use ver03 index bcver03, bchorv03
+*                  USE OTONO04 INDEX BCOTO04, BCHORO04
+*        	   USE VER05 INDEX BCVER05, BCHORV05
+*                  USE VER04 INDEX BCVER04, BCHORV04
+*                  USE PRIM06 INDEX BCPRIM06, BCHORP06
+* 		   USE VER06 INDEX BCVER06, BCHORV06
+*	 	   USE OTONO06 INDEX BCOTO06, BCHORO06
+*		   USE PRIM07 INDEX BCPRIM07, BCHORP07                  
+*		   USE VER07 INDEX BCVER07, BCHORV07
+*		   USE OTONO07 INDEX BCOTO07, BCHORO07
+*		   USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                  USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                  APPEND BLANK
+                  REPLACE NUMERO WITH solicitante
+                  REPLACE NOMBRE WITH LEFT(usua,10)
+                  REPLACE NOMPAR WITH numpar
+                  REPLACE TIPMOV WITH LEFT(movimiento,1)
+                  REPLACE FECHA WITH fech
+                  REPLACE HORA WITH hor
+                  REPLACE ENCARGADO WITH LEFT(almacen,2)
+
+                         ***********   Control de multas manuales ******
+                  skip - 1
+                  flag = "A"
+                  DO WHILE flag = "A"
+                     IF  NOMPAR = numpar .AND. TIPMOV = "S"
+                           flag = "B"
+                     ELSE
+                        IF .NOT. BOF()
+                           skip - 1
+                        ELSE
+                           flag = "C"
+                        ENDIF
+                     ENDIF
+                  ENDDO
+                  IF flag = "B"
+                     REPLACE TIPMOV WITH "ok " + LEFT(TIPMOV,5)
+                     dias = 0
+                     fechatemp = fech
+                     DO WHILE FECHA <> fechatemp
+                        fechatemp = fechatemp - 1
+                        dias = dias + 1
+                     ENDDO
+                     tiemusa = hor - HORA
+
+                     IF tiemusa < 0
+                                           ************  MENOS DE 24 HRS **
+                        tiemusa = 2400 + tiemusa
+                        dias = dias - 1
+                     ENDIF
+
+                     horas = - 1
+                     DO WHILE tiemusa > 0
+                        tiemusa = tiemusa - 100
+                        horas = horas + 1
+                     ENDDO
+                     tiemusa = tiemusa + 100
+                     IF tiemusa > 59
+                        tiemusa = tiemusa - 40
+                     ENDIF
+                     minutos = horas * 60 + tiemusa
+
+                     cach = "no"
+                     IF dias <> 0
+                        cach = "si"
+                        set color to w+/r
+                        clear
+                     ENDIF
+                     IF minutos > 135
+                        cach = "si"
+                        set color to w+/r
+                        clear
+
+                     ENDIF
+
+                     IF cach = "si"
+                        @ 13, 8 to 20, 69
+                        horas = (minutos - 135) / 60
+                        DO WHILE horas > 0
+                           horas = horas - 1
+                           multas = multas + 1
+                        ENDDO
+                        multas = multas + dias * 24
+                        @ 17,10 SAY "Hora de solicitud"
+                        @ 17,32 say HORA
+                        @ 17,38 SAY FECHA
+                        @ 18,10 SAY "Hora de entrega"
+                        @ 18,26 SAY  hor
+                        @ 18,36 say "  "
+                        @ 18,38 SAY fech
+                        @ 19, 10 SAY "Horas de Retraso: "
+                        @ 19, 26 SAY multas
+                     ELSE
+                        @ 13, 8 to 17,69
+                     ENDIF
+                     REPLACE CANT0MULTA WITH multas
+                     @ 14,10 SAY apar
+                     @ 15,10 SAY "USUARIO:" + usua
+
+                     @ 16,10 SAY "El manual " + right(numpar,9) + " ha sido ENTREGADO"
+                     @ 22, 26 SAY "Presione cualquier tecla para continuar..." 
+                     SET COLOR TO W+/R+
+                     WAIT ""
+                     set color to G+/B
+                     clear
+                     close database
+                  ELSE
+                     @ 20, 10 SAY "ERROR."
+                     error = 1
+                  ENDIF
+               ELSE
+                  set color to W+/R+
+                  @ 12, 20 SAY "El manual se encuentra en su lugar, favor de corregir!"
+****************-----------------------------------
+                  @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                  @ 20, 65  GET almacen
+                  READ
+                  @ 20, 65 SAY "*******"
+                  longi = LEN(TRIM(almacen))
+                  do while longi < 5
+                     almacen = SPACE(7)
+		     @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+		     @ 21, 20  SAY "LA CLAVE ES INCORRECTA"
+                     @ 20, 65  GET almacen
+                     read
+                     @ 20, 65 SAY "*******"
+                     longi = LEN(TRIM(almacen))
+                  enddo
+                  almacen = TRIM(almacen)
+                  use EMPLEADOS index EMPNUM
+                  go top
+                  valido = 0
+                  find &almacen
+                  IF FOUND()
+                     valido = 1
+                  ENDIF
+                  close database
+                  almacen = SPACE(7)
+		  do while valido = 0
+                     almacen = SPACE(7)
+		     @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                     @ 20, 65  GET almacen
+                     read
+                     @ 20, 65 SAY "*******"
+                     longi = LEN(TRIM(almacen))
+                     do while longi < 5
+                     almacen = SPACE(7)
+                        @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                        @ 21, 20 SAY "                                         "
+                        @ 20, 65  GET almacen
+                        read
+                        @ 20, 65 SAY "*******"
+                        longi = LEN(TRIM(almacen))
+                     enddo
+                     use EMPLEADOS index EMPNUM
+                     go top
+                     find &almacen
+                     IF FOUND()
+                        valido = 1
+		     ELSE
+                        @ 21, 20 SAY "El encargado no se encuentra registrado!"
+                        i = 1
+                        do while i < 1000
+                           i = i + 1
+                        enddo
+                     ENDIF
+                     close database
+                  enddo	
+
+************-----------------------------------
+
+                  error = 1
+               ENDIF
+            ELSE
+               IF movimiento = "S"
+                  IF STATUSM = "P"
+                     REPLACE STATUSM WITH  "A"
+                     replace encargadom with solicitante
+                     REPLACE FECHA_SOL WITH DATE()
+                     fech = DATE()
+                     apar = posicionm+ " " + NOMBRE
+                     close database
+*                     use VER99 INDEX BCHORV99, BCVER99
+*                     USE VER98 INDEX BCVER98, BCHORV98  
+*                     use OTONO99 INDEX BCOTO99, BCHORO99
+*                     use DPRIM04 INDEX BDPRIM04,BDHORP04
+*                     use ver03 index bcver03, bchorv03
+*                     USE OTONO04 INDEX BCOTO04, BCHORO04
+*		      USE VER05 INDEX BCVER05, BCHORV05
+*                     USE VER04 INDEX BCVER04, BCHORV04
+*                     USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		      USE VER06 INDEX BCVER06, BCHORV06
+*		      USE OTONO06 INDEX BCOTO06, BCHORO06
+*		      USE PRIM07 INDEX BCPRIM07, BCHORP07
+*		      USE VER07 INDEX BCVER07, BCHORV07
+*		      USE OTONO07 INDEX BCOTO07, BCHORO07
+*		      USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                     USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                     APPEND BLANK
+                     REPLACE NUMERO WITH solicitante
+                     REPLACE NOMBRE WITH LEFT(usua,10)
+                     REPLACE NOMPAR WITH numpar
+                     REPLACE TIPMOV WITH LEFT(movimiento,1)
+                     REPLACE FECHA WITH fech
+                     REPLACE HORA WITH hor
+                     REPLACE ENCARGADO WITH LEFT(almacen,2)
+                     @ 15, 8 to 19,69
+                     @ 16,10 SAY apar
+                     @ 17,10 SAY "USUARIO:" + usua
+                     set color to RG+/B
+                     @ 18,10 SAY "El manual " + numpar + " ha sido " + movimiento + "DO"
+                     close database
+                  ELSE
+                     set color to W+/R+
+                     @ 16, 20 SAY "El manual se encuentra prestado, favor de corregir!"
+****************-----------------------------------
+                  @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                  @ 20, 65  GET almacen
+                  READ
+                  @ 20, 65 SAY "*******"
+                  longi = LEN(TRIM(almacen))
+                  do while longi < 5
+                     almacen = SPACE(7)
+		     @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+		     @ 21, 20  SAY "LA CLAVE ES INCORRECTA"
+                     @ 20, 65  GET almacen
+                     read
+                     @ 20, 65 SAY "*******"
+                     longi = LEN(TRIM(almacen))
+                  enddo
+                  almacen = TRIM(almacen)
+                  use EMPLEADOS index EMPNUM
+                  go top
+                  valido = 0
+                  find &almacen
+                  IF FOUND()
+                     valido = 1
+                  ENDIF
+                  close database
+                  almacen = SPACE(7)
+		  do while valido = 0
+                     almacen = SPACE(7)
+		     @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                     @ 20, 65  GET almacen
+                     read
+                     @ 20, 65 SAY "*******"
+                     longi = LEN(TRIM(almacen))
+                     do while longi < 5
+                     almacen = SPACE(7)
+                        @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                        @ 21, 20 SAY "                                         "
+                        @ 20, 65  GET almacen
+                        read
+                        @ 20, 65 SAY "*******"
+                        longi = LEN(TRIM(almacen))
+                     enddo
+                     use EMPLEADOS index EMPNUM
+                     go top
+                     find &almacen
+                     IF FOUND()
+                        valido = 1
+		     ELSE
+                        @ 21, 20 SAY "El encargado no se encuentra registrado!"
+                        i = 1
+                        do while i < 1000
+                           i = i + 1
+                        enddo
+                     ENDIF
+                     close database
+                  enddo	
+
+************-----------------------------------
+
+
+                     error = 1
+                  ENDIF
+               ELSE
+                  if movimiento <> "R"
+                     @ 19, 40 SAY "Tipo de Movimiento NO VALIDO!"
+****************-----------------------------------
+                  @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                  @ 20, 65  GET almacen
+                  READ
+                  @ 20, 65 SAY "*******"
+                  longi = LEN(TRIM(almacen))
+                  do while longi < 5
+                     almacen = SPACE(7)
+		     @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+		     @ 21, 20  SAY "LA CLAVE ES INCORRECTA"
+                     @ 20, 65  GET almacen
+                     read
+                     @ 20, 65 SAY "*******"
+                     longi = LEN(TRIM(almacen))
+                  enddo
+                  almacen = TRIM(almacen)
+                  use EMPLEADOS index EMPNUM
+                  go top
+                  valido = 0
+                  find &almacen
+                  IF FOUND()
+                     valido = 1
+                  ENDIF
+                  close database
+                  almacen = SPACE(7)
+		  do while valido = 0
+                     almacen = SPACE(7)
+		     @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                     @ 20, 65  GET almacen
+                     read
+                     @ 20, 65 SAY "*******"
+                     longi = LEN(TRIM(almacen))
+                     do while longi < 5
+                     almacen = SPACE(7)
+                        @ 20, 20  SAY "ENTRE CLAVE ENCARGADO ALMACEN PARA CONTINUAR:"
+                        @ 21, 20 SAY "                                         "
+                        @ 20, 65  GET almacen
+                        read
+                        @ 20, 65 SAY "*******"
+                        longi = LEN(TRIM(almacen))
+                     enddo
+                     use EMPLEADOS index EMPNUM
+                     go top
+                     find &almacen
+                     IF FOUND()
+                        valido = 1
+		     ELSE
+                        @ 21, 20 SAY "El encargado no se encuentra registrado!"
+                        i = 1
+                        do while i < 1000
+                           i = i + 1
+                        enddo
+                     ENDIF
+                     close database
+                  enddo	
+
+************-----------------------------------
+
+
+
+                     error = 1
+                  endif
+               ENDIF
+            ENDIF
+
+***************************************************************************
+                    ****************** RENOVACION DE MANUALES  *********
+***************************************************************************
+
+           IF movimiento = "R"
+              IF STATUSM = "A"
+                 fech = DATE()
+                 multas = 0
+                 apar = posicionm + " "+ NOMBRE
+                 replace encargadom with solicitante
+                 close database
+*                 use VER99 INDEX BCHORV99, BCVER99
+*                 USE VER98 INDEX BCHORV98, BCVER98
+*                 use OTONO99 INDEX BCOTO99, BCHORO99
+*                 use DPRIM04 INDEX BDPRIM04,BDHORP04
+*                 use ver03 index bcver03, bchorv03
+*                 USE OTONO04 INDEX BCOTO04, BCHORO04
+*	          USE VER05 INDEX BCVER05, BCHORV05
+*                 USE VER04 INDEX BCVER04, BCHORV04
+*                 USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		  USE VER06 INDEX BCVER06, BCHORV06
+*		  USE OTONO06 INDEX BCOTO06, BCHORO06
+*		  USE PRIM07 INDEX BCPRIM07, BCHORP07
+*	          USE VER07 INDEX BCVER07, BCHORV07
+*		  USE OTONO07 INDEX BCOTO07, BCHORO07
+*		  USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                 USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                 APPEND BLANK
+                 REPLACE NUMERO WITH solicitante
+                 REPLACE NOMBRE WITH LEFT(usua,10)
+                 REPLACE NOMPAR WITH numpar
+                 REPLACE TIPMOV WITH "E"
+                 REPLACE FECHA WITH fech
+                 REPLACE HORA WITH hor
+                 REPLACE ENCARGADO WITH LEFT(almacen,2)
+
+                 
+                 APPEND BLANK
+                 REPLACE NUMERO WITH solicitante
+                 REPLACE NOMBRE WITH LEFT(usua,10)
+                 REPLACE NOMPAR WITH numpar
+                 REPLACE TIPMOV WITH "S"
+                 REPLACE FECHA WITH fech
+                 REPLACE HORA WITH hor
+                 REPLACE ENCARGADO WITH LEFT(almacen,2)
+
+                         ***********   Control de multas manuales ******
+                 skip - 1
+                 skip - 1
+                 flag = "A"
+                 DO WHILE flag = "A"
+                    IF  NOMPAR = numpar .AND. TIPMOV = "S"
+                        flag = "B"
+                    ELSE
+                       IF .NOT. BOF()
+                          skip - 1
+                        ELSE
+                           flag = "C"
+                        ENDIF
+                    ENDIF
+                 ENDDO
+                 IF flag = "B"
+                    REPLACE TIPMOV WITH "ok " + LEFT(TIPMOV,5)
+                    dias = 0
+                    fechatemp = fech
+                    DO WHILE FECHA <> fechatemp
+                       fechatemp = fechatemp - 1
+                       dias = dias + 1
+                    ENDDO
+                    tiemusa = hor - HORA
+
+                    IF tiemusa < 0
+                                           ************  MENOS DE 24 HRS **
+                        tiemusa = 2400 + tiemusa
+                        dias = dias - 1
+                     ENDIF
+
+                     horas = - 1
+                     DO WHILE tiemusa > 0
+                        tiemusa = tiemusa - 100
+                        horas = horas + 1
+                     ENDDO
+                     tiemusa = tiemusa + 100
+                     IF tiemusa > 59
+                        tiemusa = tiemusa - 40
+                     ENDIF
+                     minutos = horas * 60 + tiemusa
+
+                     cach = "no"
+                     IF dias <> 0
+                        cach = "si"
+                        set color to w+/r
+                        clear
+                     ENDIF
+                     IF minutos > 135
+                        cach = "si"
+                        set color to w+/r
+                        clear
+                     ENDIF
+                     IF cach = "si"
+                        @ 13, 8 to 20, 69
+                        horas = (minutos - 135) / 60
+                        DO WHILE horas > 0
+                           horas = horas - 1
+                           multas = multas + 1
+                        ENDDO
+                        multas = multas + dias * 24
+                        @ 17,10 SAY "Hora de solicitud"
+                        @ 17,32 say HORA
+                        @ 17,38 SAY FECHA
+                        @ 18,10 SAY "Hora de entrega"
+                        @ 18,26 SAY  hor
+                        @ 18,36 say "  "
+                        @ 18,38 SAY fech
+                        @ 19, 10 SAY "Horas de Retraso: "
+                        @ 19, 26 SAY multas
+                     ELSE
+                        @ 13, 8 to 17,69
+                     ENDIF
+                     REPLACE CANT0MULTA WITH multas
+                     @ 14,10 SAY apar
+                     @ 15,10 SAY "USUARIO:" + usua
+                     set color to r/w
+                     @ 16,10 SAY "El manual " + right(numpar,9) + " ha sido " + "RENOVADO"
+                     @ 22, 26 SAY " "
+                     SET COLOR TO R+/W+
+                     WAIT "Presione cualquier tecla para continuar..."
+                     set color to G+/B
+                     clear
+                     close database
+                  ELSE
+                     @ 20, 10 SAY "ERROR."
+                     error = 1
+                  ENDIF
+              ELSE
+                 SET COLOR TO W+/R+
+                 @ 12, 10 SAY "ERROR, FAVOR DE RENOVARLO POR PARTES"
+              ENDIF
+           ENDIF
+        ELSE
+           set color to W+/R+
+              IF NuMPAR <> "MANUALES"
+                 IF NUMPAR <> "MULTAS"
+                    @ 12, 20 SAY "No se Encontraron partes con ese nombre"
+                    error = 1
+                 ENDIF
+              ENDIF
+         ENDIF
+******************************/////
+*         ENDIF
+******************************/////
+
+
+         close database
+
+
+      CASE cual = "E"
+                         ****************** CONTROL DE EQUIPO  *********
+         longi = LEN(numpar)
+         IF LEFT(NUMPAR,5) = "EMESA"
+               DO BCASIME
+         ENDIF
+         IF NUMPAR = "EQUIPOS"
+            USE EQUIPO INDEX BCPOSIE
+            I = 5
+            @  0,  0 CLEAR
+            @  1,  4 TO 3, 75
+            @  2, 20 SAY "E Q U I P O     P R E S T A D O    A    " + SOLICITANTE
+            @  4,  1 SAY "     FECHA   POSICION       APARATO            MARCA          MODELO"
+         
+            DO WHILE .NOT. EOF()
+               IF ENCARGADO = SOLICITANTE .AND. STATUS = "A"
+                  @  I,  5 SAY FECHA_INV
+                  @  I, 14 SAY POSICION + " " +  APARATO + " " + MARCA + " " + MODELO 
+                  I = I + 1
+                  IF I > 22
+                     @ I + 1, 5 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+                     WAIT
+                     I = 5
+                     @  0,  0 CLEAR
+                     @  1,  4 TO 3, 75
+                     @  2, 20 SAY "E Q U I P O     P R E S T A D O    A    " + SOLICITANTE
+                     @  4,  1 SAY "     FECHA   POSICION       APARATO            MARCA           MODELO"
+                  ENDIF
+               ENDIF
+               SKIP
+            ENDDO
+            @ I + 1, 5 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+            WAIT
+         ENDIF
+
+         IF longi = 7 
+            use EQUIPO index POSIE
+            go top
+            find &numpar
+            IF found()
+               apar = POSICION + " " + APARATO + " " + MARCA + " MODELO" + MODELO
+*************************************************/////////////
+               IF movimiento = "C" .OR. movimiento = "c"
+                  USE EQUIPO INDEX POSIE
+                  FIND &NOMPAR
+                  IF FOUND()
+                     APA  = APARATO
+                     MAR  = MARCA
+                     MOD  = MODELO
+                     NUS  = NUMERO_SER
+                     FEC  = FECHA_INV
+                     ENC  = trim(ENCARGADO)
+                     STA  = STATUS
+                     CHE  = CHK
+                     CLOSE DATABASE
+                     IF STA = "A"
+                        USE USUARIOS INDEX BCNUMERO
+                        FIND &ENC
+                        IF FOUND()
+                           NOMB = NOMBRE
+                           STAT = STATUS
+                           NIVE = NIVEL
+                           FALT = FALTAS
+                           DESC = DESCRIPCION
+                           CLOSE DATABASE
+                        ENDIF
+                        @  0,  0 CLEAR
+                        @  2,  5 TO 4, 65
+                        @  3, 18 SAY "C O N S U L T A    D E    E Q U I P O"
+                        @  6,  5 TO 12,65
+                        @  7,  8 SAY "EQUIPO: " + NOMPAR + " " + APA
+                        @  8,  8 SAY "SOLICITADO POR: " + NOMB
+                        @  8, 55 SAY ENC
+                        @  9,  8 SAY "FECHA DE SOLICITUD: " 
+                        @  9, 29 SAY FEC
+                        @  9, 38 SAY "STATUS: " + STAT + " NIVEL: " + NIVE
+                        @ 10,  8 SAY "FALTAS: "
+                        @ 10, 18 SAY FALT 
+                        @ 10, 30 SAY "DESCRIPCION: " + DESC
+                        @ 11,  8 SAY "CHECADO: " + CHE
+                        @ 14, 10 SAY "PRESIONE CUALQUIER TECLA PARA CONTINUAR"
+                        WAIT 
+                     ELSE
+                        @  0,  0 CLEAR
+                        @  2,  5 TO 4, 65
+                        @  3, 18 SAY "C O N S U L T A    D E    E Q U I P O"
+
+                        @  10, 12 SAY "EL EQUIPO SE ENCUENTRA EN SU LUGAR"
+                     ENDIF
+                  ENDIF
+               ENDIF
+               IF movimiento = "e" .OR. movimiento = "E"
+                  IF STATUS = "A"
+                        fech = DATE()
+                        REPLACE STATUS WITH  "P"
+                        REPLACE ENCARGADO WITH LEFT(almacen,2)
+                        REPLACE FECHA_INV WITH fech
+                        close database
+*                        use VER99 INDEX BCHORV99, BCVER99
+*                        USE VER98 INDEX BCVER98, BCHORV98  
+*                        use OTONO99 INDEX BCOTO99, BCHORO99
+*                        use DPRIM04 INDEX BDPRIM04,BDHORP04
+*                        use ver03 index bcver03, bchorv03
+*                        USE OTONO04 INDEX BCOTO04, BCHORO04
+*     		         USE VER05 INDEX BCVER05, BCHORV05
+*                        USE VER04 INDEX BCVER04, BCHORV04
+*                        USE PRIM06 INDEX BCPRIM06, BCHORP06
+*		         USE VER06 INDEX BCVER06, BCHORV06
+*		         USE OTONO06 INDEX BCOTO06, BCHORO06
+*		         USE PRIM07 INDEX BCPRIM07, BCHORP07
+*		         USE VER07 INDEX BCVER07, BCHORV07
+*		         USE OTONO07 INDEX BCOTO07, BCHORO07
+*			 USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                        USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+
+
+                        APPEND BLANK
+                        REPLACE NUMERO WITH LEFT(solicitante,7)
+                        REPLACE NOMBRE WITH usua
+                        REPLACE NOMPAR WITH numpar
+                        REPLACE TIPMOV WITH LEFT(movimiento,1)
+                        REPLACE FECHA WITH fech
+                        REPLACE HORA WITH hor
+                        REPLACE ENCARGADO WITH LEFT(almacen,2)
+                        @ 15, 8 to 19,69
+                        @ 16,10 SAY apar
+                        @ 17,10 SAY "USUARIO:" + usua
+                        set color to G+/B
+                        @ 18,10 SAY "El equipo " + right(numpar,4) + " ha sido " + movimiento + "DO"
+                        close database                     
+                  ELSE
+                     IF LEFT(NUMPAR,5) <> "EMESA" 
+                        set color to W+/R+
+                        @ 12, 20 SAY "El equipo se encuentra en su lugar, favor de corregir!..."
+                        error = 1
+                     endif
+                  ENDIF
+               ELSE
+                  IF movimiento = "s" .OR. movimiento = "S"
+
+                     IF STATUS = "P"                       
+                           fech = DATE()
+                           REPLACE STATUS WITH  "A"
+                           REPLACE ENCARGADO WITH LEFT(solicitante,7)
+                           REPLACE FECHA_INV WITH fech
+                           fech = DATE()
+                           close database
+*                           use VER99 INDEX BCHORV99, BCVER99
+*                           USE VER98 INDEX BCVER98, BCHORV98  
+*                           use OTONO99 INDEX BCOTO99, BCHORO99
+*                           use ver03 index bcver03, bchorv03
+*                           USE OTONO04 INDEX BCOTO04, BCHORO04
+*			    USE VER05 INDEX BCVER05, BCHORV05
+*                           use DPRIM04 INDEX BDPRIM04,BDHORP04
+*                           USE VER04 INDEX BCVER04, BCHORV04
+*                           USE PRIM06 INDEX BCPRIM06, BCHORP06
+*			    USE VER06 INDEX BCVER06, BCHORV06
+*		  	    USE OTONO06 INDEX BCOTO06, BCHORO06
+*		            USE PRIM07 INDEX BCPRIM07, BCHORP07
+*			    USE VER07 INDEX BCVER07, BCHORV07
+*		            USE OTONO07 INDEX BCOTO07, BCHORO07
+*			    USE PRIM08 INDEX BCPRIM08, BCHORP08
+*                           USE VER08 INDEX BCVER08, BCHORV08
+USE PRIM09 INDEX BCPRIM09, BCHORP09
+
+                           APPEND BLANK
+                           REPLACE NUMERO WITH LEFT(solicitante,7)
+                           REPLACE NOMBRE WITH usua
+                           REPLACE NOMPAR WITH numpar
+                           REPLACE TIPMOV WITH LEFT(movimiento,1)
+                           REPLACE FECHA WITH fech
+                           REPLACE HORA WITH hor
+                           REPLACE ENCARGADO WITH LEFT(almacen,2)
+*                           SET PRINT ON
+                           RENGLON = PROW()
+*                           set device to print
+                           RENGLON = RENGLON - 1
+*                           @ RENGLON + 1,  0 SAY "LABORATORIO DE ELECTRONICA"
+*                           @ RENGLON + 1, 33 SAY SOLICITANTE
+*                           @ RENGLON + 2,  0 SAY "    * VALE DE EQUIPO *"
+*                           @ RENGLON + 3,  4 SAY TIME()
+*                           @ RENGLON + 3, 14 SAY DATE()
+*                           @ RENGLON + 4,  1 SAY left(apar,28)
+*                           @ RENGLON + 5,  3 SAY USUA
+*                           @ RENGLON + 5, 30 SAY "__________"
+*                           @ RENGLON + 6, 34 SAY "FIRMA"
+*                           @ RENGLON + 13, 0 SAY "."
+*                           set device to screen
+*                           SET PRINT OFF
+                           CLEAR
+                           @ 15, 8 to 19,69
+                           @ 16,10 SAY apar
+                           @ 17,10 SAY "USUARIO:" + usua
+                           set color to RG+/B
+                           @ 18,10 SAY "El equipo " + right(numpar,4) + " ha sido " + movimiento + "DO"
+                           SET PRINT OFF
+                           close database
+                     ELSE
+                        set color to W+/R+
+                        @ 12, 20 SAY "El equipo se encuentra prestado, favor de corregir!"
+                        error = 1
+                     ENDIF
+                  ELSE
+                     IF MOVIMIENTO <> "C"
+                        @ 15, 40 SAY "Tipo de movimiento NO VALIDO"
+                        error = 1
+                     ENDIF
+                  ENDIF
+               ENDIF
+            ELSE
+               set color to W+/R+
+               @ 12, 20 SAY "No se encontraron partes con ese nombre."
+               error = 1
+            ENDIF
+         ELSE
+            IF LEFT(NUMPAR,5) <> "EMESA" 
+               set color to W+/R+
+               @ 12, 20 SAY "No se encontraron partes con ese nombre.."
+               error = 1
+            ENDIF
+         ENDIF
+      ENDIF  
+      close database
+
+      CASE cual = "F"
+         @  8,10 SAY "                                                          "
+         @ 15, 5 SAY "* * * * *   El usuario " + usua + " ha sido atendido   * * * * *"
+         K=1
+         do while K<1000
+            K = K + 1
+        enddo
+
+      OTHERWISE
+         @ 12,20 SAY "No se encontraron partes con ese NOMBRE !"
+         error = 1
+      ENDCASE
+      vez = vez + 1
+      set color to W+/B+
+      @ 21, 20 SAY "                    Espere un momento..."
+*     set color to W+/B+
+      K=1
+      do while K<1500
+         K = K + 1
+      enddo
+   ENDDO
+   
+         *   DEL CICLO DE ATENDIENDO A *
+
+*                                        -------------------------------------- anexo ene12/04
+* endif
+*                                        -------------------------------------- anexo ene12/04
+   ENDIF
+   IF error = 1
+      USE ERRORES INDEX HORAE
+      
+      APPEND BLANK
+      REPLACE NUMERO WITH LEFT(solicitante,7)
+      REPLACE NOMPAR WITH numpar
+      REPLACE TIPMOV WITH LEFT(movimiento,1)
+      REPLACE FECHA WITH DATE()
+      REPLACE HORA WITH TIME()
+      REPLACE ENCARGADO WITH LEFT(almacen,2)
+      CLOSE DATABASE
+   ENDIF
+
+
+   store "S" to sig
+
+enddo
+close all

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuario</title>
+    <!-- Enlace a hojas de estilo -->
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/styles-adduser.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/script-adduser.js"></script>
+</head>
+<body>
+    <!-- Barra de navegación principal -->
+    <div>
+        <nav id="main-nav">
+            <div class="logo-container">
+                <img src="../resources/images/logo-udlap.png" alt="" class="img-fluid" id="logo-udlap">
+            </div>
+            <div class="header-container" id="header-container">
+                <header id="nav-departamento">
+                    Departamento de Electrónica
+                </header>
+                <header id="nav-titulo">
+                    -Registro y modificación de usuarios-
+                </header>
+            </div>
+        </nav>
+    </div>
+    <br>
+    <!-- Contenedor principal para el formulario -->
+    <div class="container-general">
+        <div class="button-return">
+            <a href="../index.html">
+                <img src="../resources/images/icon-return.png" alt="">
+            </a>
+        </div>
+        <div class="box-white">
+            <form id="user-form" action="bkend_adduser.php" method="POST">
+                <div class="form-group">
+                    <label for="user-id">ID</label>
+                    <input type="text" class="form-control" id="user-id" name="user-id" required placeholder="Ingrese su ID" value="181763">
+                </div>
+                <div class="form-group">
+                    <label for="user-name">Nombre Completo</label>
+                    <input type="text" class="form-control" id="user-name" name="user-name" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="user-level">Nivel</label>
+                    <input type="text" class="form-control" id="user-level" name="user-level" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="user-absences">Faltas</label>
+                    <input type="text" class="form-control" id="user-absences" name="user-absences" readonly>
+                </div>
+                <div id="additional-info" class="form-container">
+                    <div class="form-group">
+                        <label for="user-status">Estado</label>
+                        <select class="form-control" id="user-status" name="user-status">
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="user-email">Email</label>
+                        <input type="email" class="form-control" id="user-email" name="user-email" placeholder="Ingrese su E-Mail">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-phone">Teléfono</label>
+                        <input type="text" class="form-control" id="user-phone" name="user-phone" placeholder="Ingrese su número telefónico">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-password">Contraseña</label>
+                        <input type="password" class="form-control" id="user-password" name="user-password" placeholder="Ingrese su contraseña">
+                    </div>
+                    <div class="form-group">
+                        <label for="user-password-confirm">Confirmar Contraseña</label>
+                        <input type="password" class="form-control" id="user-password-confirm" name="user-password-confirm" placeholder="Confirme su contraseña">
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-lg" id="button-enviar">Enviar</button>
+                <br><br>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
