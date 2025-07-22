@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>preview-almacen</title>
+    <link rel="stylesheet" href="css/control-automatico.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --button-size: 10vw;
+            --tooltip-bg-color: #2c3e50;
+            --tooltip-text-color: white;
+        }
+
+        .button-ca {
+            position: relative;
+            display: inline-block;
+            width: var(--button-size);
+            height: var(--button-size);
+            margin: 20px;
+            border-radius: 50%;
+            overflow: hidden;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .button-ca img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .button-ca:hover {
+            transform: scale(1.1);
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+        }
+
+        .tooltip {
+            visibility: hidden;
+            width: 120px;
+            background-color: var(--tooltip-bg-color);
+            color: var(--tooltip-text-color);
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transform: scale(0);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--tooltip-bg-color) transparent transparent transparent;
+        }
+
+        .button-ca:hover .tooltip {
+            visibility: visible;
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <nav id="main-nav">
+            <div class="logo-container">
+                <img src="resources/images/logo-udlap.png" alt="" class="img-fluid" id="logo-udlap">
+            </div>
+            <div class="header-container" id="header-container">
+                <header id="nav-departamento">
+                    Departamento de Electrónica
+                </header>
+                <header id="nav-titulo">
+                    -Control automático de equipo, componentes y manuales-
+                </header>
+            </div>
+        </nav>
+    </div>
+    <div class="container-buttons">
+        <div class="row">
+            <div class="col-3 column-left">
+                <div class="button-ca" id="button-upper-left">
+                    <img src="resources/images/icon-adduser.png" alt="">
+                    <div class="tooltip">Agregar Usuario</div>
+                </div>
+                <div class="button-ca">
+                    <img src="resources/images/icon-consultas.png" alt="">
+                    <div class="tooltip">Consultas</div>
+                </div>
+                <div class="button-ca">
+                    <img src="resources/images/icon-change.png" alt="">
+                    <div class="tooltip">Cambios</div>
+                </div>
+                <div class="button-ca" id="button-upper-left">
+                    <img src="resources/images/icon-report.png" alt="">
+                    <div class="tooltip">Reportes</div>
+                </div>
+            </div>
+            <div class="col-6 text-center">
+                <img src="resources/images/escudo-udlap.png" alt="UDLAP Logo" class="img-fluid" id="escudo-udlap">
+            </div>
+            <div class="col-3 column-right">
+                <div class="button-ca" id="button-upper-right">
+                    <img src="resources/images/icon-user.png" alt="">
+                    <div class="tooltip">Usuario</div>
+                </div>
+                <div class="button-ca">
+                    <img src="resources/images/icon-stats.png" alt="">
+                    <div class="tooltip">Estadísticas</div>
+                </div>
+                <div class="button-ca">
+                    <img src="resources/images/icon-mantenimiento.png" alt="">
+                    <div class="tooltip">Mantenimiento</div>
+                </div>
+                <div class="button-ca" id="button-upper-right"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

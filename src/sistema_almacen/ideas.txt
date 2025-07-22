@@ -1,0 +1,22 @@
+-- Sistema automatizado para cambiar la posición de los equipos. --
+
+-- App móvil de solicitudes. --
+
+-- Modificador de equipos en la base de datos; debe asegurarse de que el equipo no se encuentre
+dentro de la base previo a realizar este proceso. Este es el último botón presente en el sistema. --
+
+-- Verificación del ID de profesor para poder realizar las consultas. --
+
+-- Poder solicitar los préstamos a través del sistema de control automático, incluyendo todo el
+catálogo desde aquel punto. --
+
+-- Crear un mapa para que el usuario pueda encontrar los componentes en los almacenes una vez se 
+realice la solicitud. --
+
+--El control automático debe permitir al usuario solicitar préstamos (solo si se tienen las credenciales
+de administrador). En esta área se encontrará el mismo módulo para las consultas, pero con la opción de
+solicitar prestada la pieza. Consultas, por otro lado, de momento permite editar y eliminar campos.Este
+módulo, independientemente de dónde se encuentre, debe añadir una opción para agregar filas.
+Pensaba que podría usarse la sección de consultas únicamente para buscar las piezas y su posición, 
+mientras que se podría añadir un nuevo módulo para modificar la base de datos directamente, aunque puede
+que sea algo redundante; sobretodo con respecto al control automático y el módulo de consultas.--
