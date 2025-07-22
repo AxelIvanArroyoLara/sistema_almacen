@@ -5,9 +5,10 @@ services:
     build: .
     container_name: php-apache
     ports:
-      - "8080:80"
+    - "8080:80"
+    # Cambiado de 8080:80 a 80:80
     volumes:
-      - ./src/sistema_almacen:/var/www/html
+      - ./src/sistema_almacen:/var/www/html/sistema_almacen
     depends_on:
       - db
 
@@ -18,7 +19,7 @@ services:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: almacen
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - db_data:/var/lib/mysql
       - ./sql:/docker-entrypoint-initdb.d
