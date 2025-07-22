@@ -6,6 +6,10 @@ Lectura:
 
 -----Versión más reciente-----
 
+21/07/2025: Alpha 0.6.2.5
+- Añadido el nuevo sistema de consulta de préstamos (global)
+- Implementado el nuevo sistema de edición y eliminación de préstamos (global)
+
 14/07/2025: Alpha 0.6.1.3
 - Añadido un nuevo script encargado de prevenir el autocompletado de credenciales.
 - Añadida una nueva tabla para gestión de jornadas de servicio becario.

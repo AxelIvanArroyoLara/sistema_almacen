@@ -194,7 +194,7 @@ if (isset($_GET['numero_ser'])) {
             });
 
             /* ============================================================
-               Eliminación (sin cambios)
+                Eliminación (sin cambios)
             ============================================================ */
             $(document).on('click', '.delete', function() {
                 var id  = $(this).data('id');
@@ -222,7 +222,7 @@ if (isset($_GET['numero_ser'])) {
             });
 
             /* ============================================================
-               Filtro y paginación
+                Filtro y paginación
             ============================================================ */
             function paginateTable(rows) {
                 var totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
@@ -280,6 +280,10 @@ if (isset($_GET['numero_ser'])) {
             ============================================================ */
             filterTable();
 
+
+            /* ============================================================
+            Primera carga
+            ============================================================ */
             $('#addForm').on('submit', function(e) {
                 e.preventDefault();
 

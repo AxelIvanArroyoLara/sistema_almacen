@@ -67,6 +67,7 @@ function deletePrestamo($connection, $numero) {
 function processRequest($connection) {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Procesar la edición
+        $numero     = $_POST['numero'] ?? '';
         $nompar     = $_POST['nompar'] ?? '';
         $tipmov     = $_POST['tipmov'] ?? '';
         $fecha      = $_POST['fecha'] ?? '';

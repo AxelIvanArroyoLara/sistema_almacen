@@ -82,7 +82,7 @@ if ($prestamos === false) {
             <table class="table table-striped table-bordered" id="prestamosTable">
                 <thead class="thead-dark">
                     <tr>
-                        <th>NUMERO (ID)</th>
+                        <th>NUMERO</th>
                         <th>NOMBRE</th>
                         <th>NOMPAR</th>
                         <th>TIPMOV</th>
@@ -90,6 +90,7 @@ if ($prestamos === false) {
                         <th>ENCARGADO</th>
                         <th>HORA</th>
                         <th>CANT</th>
+                        <th>REAL_VAL</th>
                         <th>DEUDOR</th>
                         <th>ACCIONES</th>
                     </tr>
@@ -105,11 +106,12 @@ if ($prestamos === false) {
                                 <td class="editable"><?= htmlspecialchars($prestamo['FECHA'] ?? 'N/A') ?></td>
                                 <td class="editable"><?= htmlspecialchars($prestamo['ENCARGADO'] ?? 'N/A') ?></td>
                                 <td class="editable"><?= htmlspecialchars($prestamo['HORA'] ?? 'N/A') ?></td>
-                                <td class="editable"><?= htmlspecialchars($prestamo['CANT0MULTA'] ?? 'N/A') ?></td>
-                                <td class="editable"><?= htmlspecialchars($prestamo['DEUDOR'] ?? 'N/A') ?></td>
+                                <td class="editable"><?= htmlspecialchars($prestamo['CANT0MULTA'] ?? '0') ?></td>
+                                <td class="editable"><?= htmlspecialchars($prestamo['REAL_VAL'] ?? '0') ?></td>
+                                <td class="editable"><?= htmlspecialchars($prestamo['DEUDOR'] ?? '0') ?></td>
                                 <td>
-                                    <button class="btn btn-primary btn-sm edit" data-id="<?= htmlspecialchars($prestamo['numero'] ?? '') ?>">Editar</button>
-                                    <button class="btn btn-danger btn-sm delete" data-id="<?= htmlspecialchars($prestamo['numero'] ?? '') ?>">Eliminar</button>
+                                    <button class="btn btn-primary btn-sm edit" data-id="<?= htmlspecialchars($prestamo['NUMERO'] ?? '') ?>">Editar</button>
+                                    <button class="btn btn-danger btn-sm delete" data-id="<?= htmlspecialchars($prestamo['NUMERO'] ?? '') ?>">Eliminar</button>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -171,6 +173,7 @@ if ($prestamos === false) {
                             hora, cant0multa, real_val, deudor
                         },
                         success: function(resp) {
+                            console.log("Respuesta AJAX:", resp);
                             if (resp === 'success') {
                                 $('#message').text('Cambios guardados correctamente').fadeIn();
                                 row.find('.editable').attr('contenteditable', 'false');
@@ -185,7 +188,35 @@ if ($prestamos === false) {
                         error: function() {
                             $('#message').html('<div class="alert alert-danger">Error al editar</div>');
                         }
-                    })
+                    });
+                });
+
+                /* ============================================================
+                    Eliminación (sin cambios)
+                ============================================================ */
+                $(document).on('click', '.delete', function() {
+                    var id  = $(this).data('id');
+                    var row = $(this).closest('tr');
+                    if (!confirm('¿Estás seguro de eliminar este equipo?')) return;
+
+                    $.ajax({
+                        url: '../modules/mod-delete_prestamos.php',
+                        method: 'POST',
+                        data: { id: id },
+                        success: function(resp) {
+                            if (resp === 'success') {
+                                row.remove();
+                                $('#message').text('Eliminado correctamente').fadeIn();
+                                setTimeout(function(){ $('#message').fadeOut(); }, 3000);
+                                filterTable();           // Recalcular paginación
+                            } else {
+                                $('#message').html('<div class="alert alert-danger">' + resp + '</div>');
+                            }
+                        },
+                        error: function() {
+                            $('#message').html('<div class="alert alert-danger">Error al eliminar</div>');
+                        }
+                    });
                 });
 
                 // Filtros y paginación
@@ -198,7 +229,7 @@ if ($prestamos === false) {
                     var end = start + rowsPerPage;
 
                     rows.forEach(function(row, index) {
-                        row.style.display = (index, >= start && index < end) ? '' : 'none';
+                        row.style.display = (index >= start && index < end) ? '' : 'none';
                     });
 
                     document.getElementById('pageIndicator').textContent =
@@ -242,3 +273,4 @@ if ($prestamos === false) {
                 filterTable();
 
             });
+        </script>
