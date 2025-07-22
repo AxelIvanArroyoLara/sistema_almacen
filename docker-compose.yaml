@@ -8,7 +8,7 @@ services:
     - "8080:80"
     # Cambiado de 8080:80 a 80:80
     volumes:
-      - ./src/sistema_almacen:/var/www/html/sistema_almacen
+      - ./src/sistema_almacen:/var/www/html/
     depends_on:
       - db
 
