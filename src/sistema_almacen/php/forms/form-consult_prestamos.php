@@ -57,7 +57,7 @@ if ($prestamos === false) {
         <img src="../../resources/images/icon-return.png" alt="">
     </a>
 
-    <h3 class="mb-1">Consulta de prestamos del laboratorio</h3>
+    <h3 class="mb-1">Consulta de préstamos del laboratorio</h3>
     <p class="mb-0">Por favor, modifique la información cuidadosamente:</p>
 
     </header>
@@ -91,12 +91,14 @@ if ($prestamos === false) {
                         <th>HORA</th>
                         <th>CANT</th>
                         <th>DEUDOR</th>
+                        <th>ACCIONES</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (!empty($prestamos)): ?>
                         <?php foreach ($prestamos as $prestamo): ?>
                             <tr id="row-<?= htmlspecialchars($prestamo['NUMERO'] ?? '') ?>">
+                                <td class="editable"><?= htmlspecialchars($prestamo['NUMERO'] ?? 'N/A') ?></td>
                                 <td class="editable"><?= htmlspecialchars($prestamo['NOMBRE'] ?? 'N/A') ?></td>
                                 <td class="editable"><?= htmlspecialchars($prestamo['NOMPAR'] ?? 'N/A') ?></td>
                                 <td class="editable"><?= htmlspecialchars($prestamo['TIPMOV'] ?? 'N/A') ?></td>
@@ -188,11 +190,55 @@ if ($prestamos === false) {
 
                 // Filtros y paginación
                 function paginateTable(rows){
+                    console.log('Paginate is active!');
                     var totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
                     currentPage = Math.min(currentPage, totalPages);
 
                     var start = (currentPage - 1) * rowsPerPage;
                     var end = start + rowsPerPage;
+
+                    rows.forEach(function(row, index) {
+                        row.style.display = (index, >= start && index < end) ? '' : 'none';
+                    });
+
+                    document.getElementById('pageIndicator').textContent =
+                    'Página ' + currentPage + ' de ' + totalPages;
+
+                    document.getElementById('prevBtn').disabled = currentPage === 1;
+                    document.getElementById('nextBtn').disabled = currentPage === totalPages;
                 }
+
+                function filterTable() {
+                    var filter = document.getElementById('searchInput').value.toLowerCase();
+                    var allRows = Array.from(document.querySelectorAll('#prestamosTable tbody tr'));
+                    var visibles = [];
+
+                    allRows.forEach(function(tr) {
+                        var texto = tr.textContent.toLowerCase();
+                        var coincide = texto.indexOf(filter) !== -1;
+                        tr.style.display = coincide ? '' : 'none';
+                        if (coincide) visibles.push(tr);
+                    });
+
+                    paginateTable(visibles);
+                }
+
+                // Botones de navegación
+                function nextPage(){
+                    ++currentPage;
+                    filterTable();
+                }
+
+                function prevPage() {
+                    if (currentPage > 1) --currentPage;
+                    filterTable();
+                }
+
+                window.nextPage = nextPage;
+                window.prevPage = prevPage;
+                window.filterTable = filterTable;
+
+                // Primera carga
+                filterTable();
 
             });
