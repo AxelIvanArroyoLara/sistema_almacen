@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO prim14a (
                 NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
             ) VALUES (
-                :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 0, 0, 1
+                :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 1, 0, 1
             )
         ";
         $stmtInsert = $connection->prepare($sqlInsert);

@@ -96,10 +96,19 @@ function safe($val) {
         var currentPage = 1;
         var rowsPerPage = 10;
 
-        $(document).on('click', '.edit', function() {
-            var row = $(this).closest('tr');
-            row.find('.editable').attr('contenteditable', 'true').focus();
-            $(this).removeClass('edit btn-primary').addClass('save btn-success').text('Guardar');
+        $(document).on('click', '.edit', function () {
+            const $btn = $(this);
+            const $row = $btn.closest('tr');
+
+            // Hacer editables todas las celdas con la clase .editable
+            $row.find('.editable').each(function () {
+                $(this).attr('contenteditable', 'true');
+            });
+        
+            // Cambiar botón a modo guardar
+            $btn.removeClass('edit btn-primary')
+                .addClass('save btn-success')
+                .text('Guardar');
         });
 
         $(document).on('click', '.save', function() {
@@ -113,11 +122,22 @@ function safe($val) {
                 conector: row.find('td:eq(3)').text().trim(),
                 descrip1: row.find('td:eq(4)').text().trim(),
                 descrip2: row.find('td:eq(5)').text().trim(),
+                minimo: row.find('td:eq(6)').text().trim(),
                 existencia: row.find('td:eq(7)').text().trim(),
-                edit: true
+                pedidos: row.find('td:eq(8)').text().trim(),
+                conector_2: row.find('td:eq(9)').text().trim(),
+                pedido: row.find('td:eq(10)').text().trim(),
+                precio: row.find('td:eq(11)').text().trim(),
+                fecha_adq: row.find('td:eq(12)').text().trim(),
+                proveedor: row.find('td:eq(13)').text().trim(),
+                chkx: row.find('td:eq(14)').text().trim(),
+                cont_1: row.find('td:eq(15)').text().trim(),
+                cont_2: row.find('td:eq(16)').text().trim(),
+                no_provee: row.find('td:eq(17)').text().trim(),
+                stock: row.find('td:eq(18)').text().trim()
             };
-
-            $.post('../modules/bkend-consult_chips.php', data, function(resp) {
+        
+            $.post('../modules/mod-edit_chips.php', data, function(resp) {
                 if (resp.trim() === 'success') {
                     $('#message').text('Cambios guardados correctamente').fadeIn().delay(3000).fadeOut();
                     row.find('.editable').attr('contenteditable', 'false');
@@ -127,6 +147,7 @@ function safe($val) {
                 }
             });
         });
+
 
         $(document).on('click', '.delete', function() {
             if (!confirm('¿Estás seguro de eliminar este chip?')) return;

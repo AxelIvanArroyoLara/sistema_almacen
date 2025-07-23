@@ -14,7 +14,7 @@ function getPrestamos($connection, $user_id) {
 
     try {
         // Consulta segura con parámetro nombrado
-        $sql = "SELECT * FROM prim14a WHERE NUMERO = :user_id";
+        $sql = "SELECT * FROM prim14a WHERE NUMERO = :user_id ORDER BY fecha DESC, hora DESC";
         $stmt = $connection->prepare($sql);
 
         // Ejecutar la consulta

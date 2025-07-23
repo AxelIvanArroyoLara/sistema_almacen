@@ -59,22 +59,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Inserción en prim14a
         $sqlInsert = "
-            INSERT INTO prim14a (
-                NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
-            ) VALUES (
-                :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 0, 0, 1
-            )
-        ";
+                    INSERT INTO prim14a (
+                        NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
+                    ) VALUES (
+                        :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, :cantidad, :real_val, :deudor
+                    )
+                ";
+                    
+                $stmtInsert = $connection->prepare($sqlInsert);
+                $stmtInsert->execute([
+                    ':numero'    => $usuario['numero_control'],
+                    ':nombre'    => $usuario['nombre_completo'],
+                    ':nompar'    => $art_no,
+                    ':tipmov'    => 'PRESTAMO',
+                    ':encargado' => $admin_id,
+                    ':hora'      => date('Hi'),
+                    ':cantidad'  => $cantidad,
+                    ':real_val'  => 0,
+                    ':deudor'    => 1
+                ]);
 
-        $stmtInsert = $connection->prepare($sqlInsert);
-        $stmtInsert->execute([
-            ':numero'    => $usuario['numero_control'],
-            ':nombre'    => $usuario['nombre_completo'],
-            ':nompar'    => $art_no,
-            ':tipmov'    => 'PRESTAMO',
-            ':encargado' => $admin_id,
-            ':hora'      => date('Hi')
-        ]);
 
 
         echo 'success';
