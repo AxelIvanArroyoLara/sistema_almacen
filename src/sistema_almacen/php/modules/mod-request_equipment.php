@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':nompar'    => $numero_ser,
             ':tipmov'    => 'PRESTAMO',
             ':encargado' => $admin_id,
-            ':hora'      => date('Hi')
+            ':hora' => date('H:i:s')
         ]);
 
         // Actualizar el status del equipo a "PRESTADO"

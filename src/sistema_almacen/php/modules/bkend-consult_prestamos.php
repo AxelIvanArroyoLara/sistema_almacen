@@ -4,7 +4,7 @@ include_once 'conn.php';
 
 // Obtener los datos de la tabla 'prim14a'
 function getPrestamos($connection) {
-    $sql = "SELECT * FROM prim14a ORDER BY fecha DESC";
+    $sql = "SELECT * FROM prim14a ORDER BY fecha DESC, hora DESC";
     $stmt = $connection->prepare($sql);
 
     // Busca errores en cada solicitud

@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':nompar'    => $numero_ser,
             ':tipmov'    => 'DEVOLUCIÓN',
             ':encargado' => $admin_id,
-            ':hora'      => date('Hi'), // Hora en formato HHMM
+            ':hora' => date('H:i:s')
         ]);
 
         // 3. Cambiar estado a "Disponible" en tabla equipo

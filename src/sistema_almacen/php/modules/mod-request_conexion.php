@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':nompar'    => $art_no,
                     ':tipmov'    => 'PRESTAMO',
                     ':encargado' => $admin_id,
-                    ':hora'      => date('Hi'),
+                    ':hora' => date('H:i:s'),
                     ':cantidad'  => $cantidad,
                     ':real_val'  => 0,
                     ':deudor'    => 1

@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO prim14a (
                 NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
             ) VALUES (
-                :numero, :nombre, :nompar, 'DEVOLUCION', CURRENT_DATE, :encargado, :hora, 0, 0, 0
+                :numero, :nombre, :nompar, 'DEVOLUCION', CURRENT_DATE, :encargado, :hora, :cantidad, 0, 0
             )
         ";
 
@@ -67,7 +67,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':nombre'    => $usuario['nombre_completo'],
             ':nompar'    => $art_no,
             ':encargado' => $admin_id,
-            ':hora'      => date('Hi')
+            ':hora' => date('H:i:s'),
+            ':cantidad' => $cantidad
         ]);
 
         echo 'success';
