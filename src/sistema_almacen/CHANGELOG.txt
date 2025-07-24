@@ -6,10 +6,18 @@ Lectura:
 
 -----Versión más reciente-----
 
-23/07/2025: Alpha 0.7.2.4
+24/07/2025: Alpha 0.6.7.13
+- Corregido error que permitía devoluciones de usuarios indeseados.
+- Añadido el nuevo sistema de confirmación numérico para préstamo y devolución de
+conexiones.
+- Añadido el nuevo módulo para consulta de devoluciones pendientes para estudiantes.
+- Añadido el nuevo módulo para consulta de devoluciones pendientes para admins.
+- Añadida nueva tabla para validación de préstamos activos.
+
+23/07/2025: Alpha 0.6.4.11
 - Corregidos errores en el sistema de préstamos y devoluciones para conexiones.
 
-22/07/2025: Alpha 0.7.1.2
+22/07/2025: Alpha 0.6.3.7
 - Añadido el nuevo sistema de consulta de préstamos para estudiantes.
 - Eliminada la funcionalidad de edición y eliminación para registros de préstamos (global).
 - Añadido sistema de consultas provisional para devoluciones pendientes.
