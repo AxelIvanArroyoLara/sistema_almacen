@@ -10,6 +10,13 @@ if ($prestamos === false) {
     $prestamos = [];
 }
 
+$deudas = getDeudas($connection); 
+
+if ($deudas === false) {
+    $deudas = [];
+}
+
+
 
 
 
@@ -77,7 +84,53 @@ if ($prestamos === false) {
         <!-- Mensajes de éxito tras editar o eliminar -->
         <div id="message" style="display: none;" class="alert alert-success"></div> <!-- Barra verde de notificación -->
         
-        <!-- Tabla de préstamos -->
+        <!-- Tabla de deudas -->
+        <h4 class="mt-4">Devoluciones pendientes</h4>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>NUMERO</th>
+                        <th>NOMBRE</th>
+                        <th>NOMPAR</th>
+                        <th>TIPMOV</th>
+                        <th>FECHA</th>
+                        <th>ENCARGADO</th>
+                        <th>HORA</th>
+                        <th>CANT</th>
+                        <th>REAL_VAL</th>
+                        <th>DEUDOR</th>
+                    </tr>
+                </thead>
+            <tbody>
+                <?php if (!empty($deudas)): ?>
+                <?php foreach ($deudas as $p): ?>
+                    <tr>
+                        <td class="editable"><?= htmlspecialchars($p['NUMERO'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['NOMBRE'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['NOMPAR'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['TIPMOV'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['FECHA'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['ENCARGADO'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['HORA'] ?? 'N/A') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['CANT0MULTA'] ?? '0') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['REAL_VAL'] ?? '0') ?></td>
+                        <td class="editable"><?= htmlspecialchars($p['DEUDOR'] ?? '0') ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No hay equipos en préstamo actualmente.</td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+            </table>
+        </div>
+        
+        <!-- Tabla de historial -->
+        <h4 class="mt-5">Historial de movimientos</h4>
+        <br>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="prestamosTable">
                 <thead class="thead-dark">

@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             INSERT INTO prim14a (
                 NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
             ) VALUES (
-                :numero, :nombre, :nompar, 'DEVOLUCION', CURRENT_DATE, :encargado, :hora, :cantidad, 0, 0
+                :numero, :nombre, :nompar, 'DEVOLUCIÓN', CURRENT_DATE, :encargado, :hora, :cantidad, 0, 0
             )
         ";
 
@@ -70,6 +70,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':hora' => date('H:i:s'),
             ':cantidad' => $cantidad
         ]);
+
+        // Eliminar el préstamo en prestamos
+        // Obtener el préstamo actual
+        $stmtSelectPrestamo = $connection->prepare("
+            SELECT CANT0MULTA 
+            FROM prestamos 
+            WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
+        ");
+        $stmtSelectPrestamo->execute([
+            ':numero' => $user_id,
+            ':nompar' => $art_no
+        ]);
+        $prestamo = $stmtSelectPrestamo->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$prestamo) {
+            echo 'Error: No se encontró préstamo activo para este componente.';
+            exit;
+        }
+        
+        $cantRestante = (int)$prestamo['CANT0MULTA'] - $cantidad;
+        
+        if ($cantRestante <= 0) {
+            // Eliminar si no queda nada pendiente
+            $stmtDelete = $connection->prepare("
+                DELETE FROM prestamos 
+                WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
+            ");
+            $stmtDelete->execute([
+                ':numero' => $user_id,
+                ':nompar' => $art_no
+            ]);
+        } else {
+            // Actualizar con la nueva cantidad restante
+            $stmtUpdatePrestamo = $connection->prepare("
+                UPDATE prestamos 
+                SET CANT0MULTA = :nueva_cantidad 
+                WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
+            ");
+            $stmtUpdatePrestamo->execute([
+                ':nueva_cantidad' => $cantRestante,
+                ':numero'         => $user_id,
+                ':nompar'         => $art_no
+            ]);
+        }
+
 
         echo 'success';
     } catch (PDOException $e) {

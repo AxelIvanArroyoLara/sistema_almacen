@@ -29,15 +29,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         // Insertar en prim14a
-        $sqlInsert = "
+        $sqlInsertPrim = "
             INSERT INTO prim14a (
                 NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
             ) VALUES (
                 :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 1, 0, 1
             )
         ";
-        $stmtInsert = $connection->prepare($sqlInsert);
-        $stmtInsert->execute([
+        $stmtInsertPrim = $connection->prepare($sqlInsertPrim);
+        $stmtInsertPrim->execute([
+            ':numero'    => $usuario['numero_control'],
+            ':nombre'    => $usuario['nombre_completo'],
+            ':nompar'    => $numero_ser,
+            ':tipmov'    => 'PRÉSTAMO',
+            ':encargado' => $admin_id,
+            ':hora' => date('H:i:s')
+        ]);
+        
+        // Insertar en prestamos
+        $sqlInsertPrestamos = "
+            INSERT INTO prestamos (
+                NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
+            ) VALUES (
+                :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 1, 0, 1
+            )
+        ";
+        $stmtInsertPrestamos = $connection->prepare($sqlInsertPrestamos);
+        $stmtInsertPrestamos->execute([
             ':numero'    => $usuario['numero_control'],
             ':nombre'    => $usuario['nombre_completo'],
             ':nompar'    => $numero_ser,

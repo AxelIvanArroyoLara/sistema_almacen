@@ -43,12 +43,15 @@
             <form action="../../modules/credentials/bkend-auto-check_admin_id.php" method="POST">
                 <div class="form-group">
                     <label for="user-id">Ingrese el ID del estudiante</label>
+                    <br><br>
                     <input type="text" class="form-control" id="user-id" name="user-id" required placeholder="Ingrese el ID del estudiante">
                     <br><br>
                     <label for="user-password">Ingrese la clave del estudiante</label>
+                    <br><br>
                     <input type="text" class="form-control" id="user-password" name="user-password" required placeholder="Ingrese la clave del estudiante" pattern="[0-9]+">
                     <br><br>
                     <label for="admin-id">Ingrese el ID de un administrador</label>
+                    <br><br>
                     <input type="text" class="form-control" id="admin-id" name="admin-id" required placeholder="Ingrese el ID de un administrador" pattern="[0-9]+">
                     <br><br>
                 </div>

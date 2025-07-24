@@ -3,10 +3,10 @@ include_once '../modules/conn.php';
 
 $query = "
     SELECT p.*
-    FROM prim14a p
+    FROM prestamos p
     INNER JOIN (
         SELECT NUMERO, MAX(FECHA) AS ultima_fecha
-        FROM prim14a
+        FROM prestamos
         GROUP BY NUMERO
     ) ultimos
     ON p.NUMERO = ultimos.NUMERO AND p.FECHA = ultimos.ultima_fecha

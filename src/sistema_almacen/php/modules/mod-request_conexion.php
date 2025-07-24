@@ -71,6 +71,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ':numero'    => $usuario['numero_control'],
                     ':nombre'    => $usuario['nombre_completo'],
                     ':nompar'    => $art_no,
+                    ':tipmov'    => 'PRÉSTAMO',
+                    ':encargado' => $admin_id,
+                    ':hora' => date('H:i:s'),
+                    ':cantidad'  => $cantidad,
+                    ':real_val'  => 0,
+                    ':deudor'    => 1
+                ]);
+        
+        // Inserción en prestamos
+        $sqlInsertPrestamos = "
+                    INSERT INTO prestamos (
+                        NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
+                    ) VALUES (
+                        :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, :cantidad, :real_val, :deudor
+                    )
+                ";
+                    
+                $stmtInsertPrestamos = $connection->prepare($sqlInsertPrestamos);
+                $stmtInsertPrestamos->execute([
+                    ':numero'    => $usuario['numero_control'],
+                    ':nombre'    => $usuario['nombre_completo'],
+                    ':nompar'    => $art_no,
                     ':tipmov'    => 'PRESTAMO',
                     ':encargado' => $admin_id,
                     ':hora' => date('H:i:s'),

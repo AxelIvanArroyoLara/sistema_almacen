@@ -8,8 +8,14 @@ if (!isset($_SESSION['user-id'])) {
     die("Acceso no autorizado. Por favor, inicie sesión.");
 }
 
+// Obtener deuda por usuario
+$deuda = getDeuda($connection, $_SESSION['user-id']);
+if ($deuda === false) {
+    $deuda = [];
+}
+
 // Obtener préstamos filtrados por el usuario autenticado
-$prestamos = getPrestamos($connection, $_SESSION['user-id']);
+$prestamos = getHistorial($connection, $_SESSION['user-id']);
 if ($prestamos === false) {
     $prestamos = [];
 }
@@ -77,8 +83,43 @@ if ($prestamos === false) {
         <br>
         <!-- Mensajes de éxito tras editar o eliminar -->
         <div id="message" style="display: none;" class="alert alert-success"></div> <!-- Barra verde de notificación -->
+        <!-- Tabla de deudas -->
+        <h4 class="mt-4">Devoluciones pendientes</h4>
+        <br>
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Artículo</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Cantidad</th>
+                        <th>Encargado</th>
+                    </tr>
+                </thead>
+            <tbody>
+                <?php if (!empty($deuda)): ?>
+                <?php foreach ($deuda as $p): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($p['NOMPAR']) ?></td>
+                        <td><?= htmlspecialchars($p['FECHA']) ?></td>
+                        <td><?= htmlspecialchars($p['HORA']) ?></td>
+                        <td><?= htmlspecialchars($p['CANT0MULTA']) ?></td>
+                        <td><?= htmlspecialchars($p['ENCARGADO']) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+                <?php else: ?>
+                <tr>
+                    <td colspan="5" class="text-center text-muted">No hay equipos en préstamo actualmente.</td>
+                </tr>
+                <?php endif; ?>
+            </tbody>
+            </table>
+        </div>
         
-        <!-- Tabla de préstamos -->
+        <!-- Tabla de historial -->
+        <h4 class="mt-5">Historial de movimientos</h4>
+        <br>
         <div class="table-responsive">
             <table class="table table-striped table-bordered" id="prestamosTable">
                 <thead class="thead-dark">

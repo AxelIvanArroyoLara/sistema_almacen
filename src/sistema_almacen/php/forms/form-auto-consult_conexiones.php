@@ -112,6 +112,31 @@ $(function () {
     const admin_id = <?= json_encode($admin_id) ?>;
     let currentPage = 1, rowsPerPage = 10;
 
+    function validarCantidad(modal, input1, input2, boton) {
+      const val1 = parseInt($(input1).val(), 10);
+      const val2 = parseInt($(input2).val(), 10);
+      const valido = val1 > 0 && val1 === val2;
+      $(boton).prop('disabled', !valido);
+    }
+
+    // Validación dinámica para préstamo
+    $('#cantidad_p, #cantidad_p1').on('input', function () {
+        validarCantidad('#modalPrestamo', '#cantidad_p', '#cantidad_p1', '#btnConfirmarPrestamo');
+    });
+
+    // Validación dinámica para devolución
+    $('#cantidad_d, #cantidad_d1').on('input', function () {
+        validarCantidad('#modalDevolucion', '#cantidad_d', '#cantidad_d1', '#btnConfirmarDevolucion');
+    });
+
+    // Inicializar los botones deshabilitados al abrir los modales
+    $('#modalPrestamo').on('shown.bs.modal', function () {
+        $('#btnConfirmarPrestamo').prop('disabled', true);
+    });
+    $('#modalDevolucion').on('shown.bs.modal', function () {
+        $('#btnConfirmarDevolucion').prop('disabled', true);
+    });
+
     /* ----------  abrir modal de PRÉSTAMO  ---------- */
     $(document).on('click', '.solicitar', function () {
         const art   = $(this).data('id');
@@ -191,7 +216,6 @@ $(function () {
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 <!-- ······························· MODAL PRÉSTAMO ··························· -->
-<!-- ─────────────────── MODAL PRÉSTAMO ─────────────────── -->
 <div class="modal fade text-center" id="modalPrestamo" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
     <form id="formPrestamo">
@@ -209,12 +233,15 @@ $(function () {
           <div class="form-group">
             <label for="cantidad_p">Cantidad a solicitar:</label>
             <input type="number" min="1" class="form-control"
-                   name="cantidad" id="cantidad_p" required>
+                  name="cantidad" id="cantidad_p" required>
+            <label for="cantidad_p1">Confirme cantidad:</label>
+            <input type="number" min="1" class="form-control"
+                  name="cantidad1" id="cantidad_p1" required>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Confirmar</button>
+          <button type="submit" class="btn btn-primary" id="btnConfirmarPrestamo">Confirmar</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div>
       </div>
@@ -243,12 +270,15 @@ $(function () {
           <div class="form-group">
             <label for="cantidad_d">Cantidad a devolver:</label>
             <input type="number" min="1" class="form-control"
-                   name="cantidad" id="cantidad_d" required>
+                  name="cantidad" id="cantidad_d" required>
+                  <label for="cantidad_d1">Confirme cantidad:</label>
+            <input type="number" min="1" class="form-control"
+                  name="cantidad1" id="cantidad_d1" required>
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Confirmar</button>
+          <button type="submit" class="btn btn-primary" id="btnConfirmarDevolucion">Confirmar</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div>
       </div>

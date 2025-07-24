@@ -41,6 +41,10 @@
                 <p>Por favor, seleccione una de las siguientes opciones:</p>
             </div>
         </div>
+        
+        <br>
+        <br>
+        <br>
 
         <!-- Opciones -->
         <div class="row justify-content-center mt-4">
@@ -70,7 +74,9 @@
             </div>
         </div>
     </div>
-
+    <br>
+    <br>
+    <br>
     <!-- Footer -->
     <footer class="mt-5 text-center">
         <p>© 2024 Departamento de Electrónica - UDLAP</p>

@@ -16,6 +16,24 @@ function getPrestamos($connection) {
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+function getDeudas($connection) {
+    $sqlDeudas = "
+        SELECT * 
+        FROM prestamos 
+        ORDER BY FECHA DESC, HORA DESC
+    ";
+
+    $stmtDeudas = $connection->prepare($sqlDeudas);
+    if ($stmtDeudas->execute()) {
+        return $stmtDeudas->fetchAll(PDO::FETCH_ASSOC);
+    } else {
+        error_log("Error al obtener deudas: " . $stmtDeudas->errorInfo()[2]);
+        return false;
+    }
+}
+
+
+
 // Obtener un préstamo por número de ID
 function getPrestamoByID($connection, $numero) {
     $sql = "SELECT * FROM prim14a WHERE numero = :numero";

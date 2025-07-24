@@ -22,7 +22,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // 2. Registrar devolución en prim14a
+        // 2. Verificar que el usuario sea quien realizó el préstamo
+        $stmtCheck = $connection->prepare("
+            SELECT * FROM prestamos 
+            WHERE NOMPAR = :numero_ser AND TIPMOV = 'PRESTAMO'
+        ");
+        $stmtCheck->execute([':numero_ser' => $numero_ser]);
+        $prestamo = $stmtCheck->fetch(PDO::FETCH_ASSOC);
+
+        if (!$prestamo) {
+            echo 'error: No se encontró préstamo activo para este equipo.';
+            exit;
+        }
+
+        if ($prestamo['NUMERO'] != $user_id) {
+            echo 'error: Este equipo fue prestado a otro usuario.';
+            exit;
+        }
+
+        // 3. Registrar devolución en prim14a
         $sqlInsert = "
             INSERT INTO prim14a (
                 NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
@@ -37,14 +55,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':nompar'    => $numero_ser,
             ':tipmov'    => 'DEVOLUCIÓN',
             ':encargado' => $admin_id,
-            ':hora' => date('H:i:s')
+            ':hora'      => date('H:i:s')
         ]);
 
-        // 3. Cambiar estado a "Disponible" en tabla equipo
+        // 4. Eliminar el préstamo correspondiente
+        $stmtDelete = $connection->prepare("
+            DELETE FROM prestamos
+            WHERE 
+                NUMERO = :numero AND
+                NOMPAR = :nompar AND
+                TIPMOV = 'PRESTAMO'
+        ");
+        $stmtDelete->execute([
+            ':numero' => $user_id,
+            ':nompar' => $numero_ser
+        ]);
+
+        // 5. Cambiar estado a "DISPONIBLE" en equipo
         $stmtUpdate = $connection->prepare("UPDATE equipo SET status = 'DISPONIBLE' WHERE numero_ser = :numero_ser");
         $stmtUpdate->execute([':numero_ser' => $numero_ser]);
 
         echo 'success';
+
     } catch (PDOException $e) {
         echo 'error: ' . htmlspecialchars($e->getMessage());
     }
