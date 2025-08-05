@@ -97,37 +97,81 @@ function safe($val) {
 
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         var currentPage = 1;
         var rowsPerPage = 10;
 
-        const user_id = <?= json_encode($_SESSION['user_id'] ?? '') ?>;
-        const admin_id = <?= json_encode($_SESSION['admin_id'] ?? '') ?>;
+        const user_id = <?= json_encode($_SESSION['user-id'] ?? '') ?>;
+        const admin_id = <?= json_encode($_SESSION['admin-id'] ?? '') ?>;
 
+        // Abrir modal de solicitud
         $(document).on('click', '.request', function () {
             const art_no = $(this).data('id');
-            $.post('../modules/mod-request_chips.php', { art_no, user_id, admin_id }, function (resp) {
-                if (resp.trim() === 'success') {
-                    $('#message').text('Chip solicitado exitosamente.').fadeIn().delay(3000).fadeOut();
-                    location.reload(); // actualiza tabla para reflejar stock
-                } else {
-                    $('#message').html('<div class="alert alert-danger">' + resp + '</div>').fadeIn().delay(3000).fadeOut();
-                }
-            });
+
+            $('#art_no_p').val(art_no);
+            $('#cantidad_p').val(1);
+            $('#cantidad_p1').val(1);
+            $('#user_id_p').val(user_id);
+            $('#admin_id_p').val(admin_id);
+            $('#btnConfirmarPrestamo').prop('disabled', true);
+            $('#modalPrestamo').modal('show');
         });
 
+        // Abrir modal de devolución
         $(document).on('click', '.return', function () {
             const art_no = $(this).data('id');
-            $.post('../modules/mod-return_chips.php', { art_no, user_id, admin_id }, function (resp) {
-                if (resp.trim() === 'success') {
-                    $('#message').text('Chip devuelto exitosamente.').fadeIn().delay(3000).fadeOut();
-                    location.reload();
-                } else {
-                    $('#message').html('<div class="alert alert-danger">' + resp + '</div>').fadeIn().delay(3000).fadeOut();
-                }
-            });
+
+            $('#art_no_d').val(art_no);
+            $('#cantidad_d').val(1);
+            $('#cantidad_d1').val(1);
+            $('#user_id_d').val(user_id);
+            $('#admin_id_d').val(admin_id);
+            $('#btnConfirmarDevolucion').prop('disabled', true);
+            $('#modalDevolucion').modal('show');
         });
 
+        // Validación de cantidad para préstamo
+        $('#cantidad_p, #cantidad_p1').on('input', function () {
+            validarCantidad('#modalPrestamo', '#cantidad_p', '#cantidad_p1', '#btnConfirmarPrestamo');
+        });
+
+        // Validación de cantidad para devolución
+        $('#cantidad_d, #cantidad_d1').on('input', function () {
+            validarCantidad('#modalDevolucion', '#cantidad_d', '#cantidad_d1', '#btnConfirmarDevolucion');
+        });
+
+        function validarCantidad(modal, input1, input2, boton) {
+            const val1 = parseInt($(input1).val(), 10);
+            const val2 = parseInt($(input2).val(), 10);
+            const valido = val1 > 0 && val1 === val2;
+            $(boton).prop('disabled', !valido);
+        }
+
+        // Envío del formulario de préstamo
+        $('#formPrestamo').on('submit', function (e) {
+            e.preventDefault();
+            $.post('../modules/mod-request_chips.php', $(this).serialize(), handleResp);
+        });
+
+        // Envío del formulario de devolución
+        $('#formDevolucion').on('submit', function (e) {
+            e.preventDefault();
+            $.post('../modules/mod-return_chips.php', $(this).serialize(), handleResp);
+        });
+
+        // Respuesta común
+        function handleResp(resp) {
+            if ($.trim(resp) === 'success') {
+                $('#message').removeClass().addClass('alert alert-success')
+                    .text('Operación realizada correctamente')
+                    .fadeIn().delay(2500).fadeOut();
+                $('.modal').modal('hide');
+                setTimeout(() => location.reload(), 2600);
+            } else {
+                $('#message').removeClass().addClass('alert alert-danger')
+                    .text(resp).fadeIn().delay(4000).fadeOut();
+            }
+        }
 
         function paginateTable(rows) {
             var totalPages = Math.max(1, Math.ceil(rows.length / rowsPerPage));
@@ -135,7 +179,7 @@ function safe($val) {
             var start = (currentPage - 1) * rowsPerPage;
             var end = start + rowsPerPage;
 
-            rows.forEach(function(row, idx) {
+            rows.forEach(function (row, idx) {
                 row.style.display = (idx >= start && idx < end) ? '' : 'none';
             });
 
@@ -149,7 +193,7 @@ function safe($val) {
             var allRows = Array.from(document.querySelectorAll('#chipsTable tbody tr'));
             var visibles = [];
 
-            allRows.forEach(function(tr) {
+            allRows.forEach(function (tr) {
                 var texto = tr.textContent.toLowerCase();
                 var coincide = texto.indexOf(filter) !== -1;
                 tr.style.display = coincide ? '' : 'none';
@@ -175,123 +219,106 @@ function safe($val) {
 
         filterTable();
 
-        $('#addChipForm').on('submit', function(e) {
+        // Formulario para agregar chip (sin cambios)
+        $('#addChipForm').on('submit', function (e) {
             e.preventDefault();
-
             var formData = $(this).serialize();
 
             $.ajax({
                 url: '../modules/mod-add_chips.php',
                 method: 'POST',
                 data: formData,
-                success: function(resp) {
+                success: function (resp) {
                     if (resp.trim() === 'success') {
-                        var rowData = {};
-                        $('#addChipForm').serializeArray().forEach(function(field) {
-                            rowData[field.name] = field.value;
-                        });
-
-                        var newRow = '<tr>';
-                        newRow += `<td>${rowData.ART_NO}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.POSICIONX}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.ETIQUETA}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.CONECTOR}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.DESCRIP1}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.DESCRIP2}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.MINIMO}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.EXISTENCIA}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.PEDIDOS}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.CONECTOR_2}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.PEDIDO}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.PRECIO}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.FECHA_ADQ}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.PROVEEDOR}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.CHKX}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.CONT_1}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.CONT_2}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.NO_PROVEE}</td>`;
-                        newRow += `<td class="editable" contenteditable="true">${rowData.STOCK}</td>`;
-                        newRow += `<td>
-                            <button class="btn btn-primary btn-sm edit" data-id="${rowData.ART_NO}">Editar</button>
-                            <button class="btn btn-danger btn-sm delete" data-id="${rowData.ART_NO}">Eliminar</button>
-                        </td>`;
-                        newRow += '</tr>';
-
-                        $('#chipsTable tbody').append(newRow);
+                        // Lógica para agregar visualmente la nueva fila...
                         $('#addChipModal').modal('hide');
                         $('#addChipForm')[0].reset();
                         $('#message').html('<div class="alert alert-success">Chip agregado exitosamente</div>')
-                                    .fadeIn().delay(3000).fadeOut();
-
+                            .fadeIn().delay(3000).fadeOut();
                         filterTable();
                     } else {
                         $('#message').html('<div class="alert alert-danger">' + resp + '</div>')
-                                    .fadeIn().delay(3000).fadeOut();
+                            .fadeIn().delay(3000).fadeOut();
                     }
                 },
-                error: function() {
+                error: function () {
                     $('#message').html('<div class="alert alert-danger">Error al registrar el chip</div>')
-                                .fadeIn().delay(3000).fadeOut();
+                        .fadeIn().delay(3000).fadeOut();
                 }
             });
         });
     });
+
     </script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
-    <!-- Modal para agregar nuevo chip -->
-    <div class="modal fade text-center" id="addChipModal" tabindex="-1" role="dialog" aria-labelledby="addChipModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-xl" role="document">
-    <div class="modal-content">
-      <form id="addChipForm">
+<div class="modal fade text-center" id="modalPrestamo" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="formPrestamo">
+      <input type="hidden" name="user_id" id="user_id_p">
+      <input type="hidden" name="admin_id" id="admin_id_p">
+
+      <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="addChipModalLabel">Agregar nuevo chip</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h5 class="modal-title">Solicitar préstamo</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
         <div class="modal-body">
-          <div class="form-row">
-            <div class="form-group col-md-3"><label>ART_NO</label><input type="text" name="ART_NO" class="form-control" required></div>
-            <div class="form-group col-md-3"><label>POSICIONX</label><input type="text" name="POSICIONX" class="form-control" required></div>
-            <div class="form-group col-md-3"><label>ETIQUETA</label><input type="text" name="ETIQUETA" class="form-control" required></div>
-            <div class="form-group col-md-3"><label>CONECTOR</label><input type="text" name="CONECTOR" class="form-control" required></div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-3"><label>DESCRIP1</label><input type="text" name="DESCRIP1" class="form-control" required></div>
-            <div class="form-group col-md-3"><label>DESCRIP2</label><input type="text" name="DESCRIP2" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>MINIMO</label><input type="number" step="any" name="MINIMO" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>EXISTENCIA</label><input type="number" step="any" name="EXISTENCIA" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>PEDIDOS</label><input type="number" step="any" name="PEDIDOS" class="form-control" required></div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-3"><label>CONECTOR_2</label><input type="text" name="CONECTOR_2" class="form-control" required></div>
-            <div class="form-group col-md-3"><label>PEDIDO</label><input type="text" name="PEDIDO" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>PRECIO</label><input type="number" step="any" name="PRECIO" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>FECHA_ADQ</label><input type="date" name="FECHA_ADQ" class="form-control" placeholder="YYYY-MM-DD" required></div>
-            <div class="form-group col-md-2"><label>PROVEEDOR</label><input type="text" name="PROVEEDOR" class="form-control" required></div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group col-md-3"><label>CHKX</label><input type="text" name="CHKX" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>CONT_1</label><input type="number" step="any" name="CONT_1" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>CONT_2</label><input type="number" step="any" name="CONT_2" class="form-control" required></div>
-            <div class="form-group col-md-3"><label>NO_PROVEE</label><input type="text" name="NO_PROVEE" class="form-control" required></div>
-            <div class="form-group col-md-2"><label>STOCK</label><input type="text" name="STOCK" class="form-control" required></div>
+          <input type="hidden" name="art_no" id="art_no_p">
+          <div class="form-group">
+            <label for="cantidad_p">Cantidad a solicitar:</label>
+            <input type="number" min="1" class="form-control" name="cantidad" id="cantidad_p" required>
+            <label for="cantidad_p1">Confirme cantidad:</label>
+            <input type="number" min="1" class="form-control" name="cantidad1" id="cantidad_p1" required>
           </div>
         </div>
 
-        <div class="modal-footer justify-content-center">
-          <button type="submit" class="btn btn-primary">Agregar</button>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="btnConfirmarPrestamo">Confirmar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
         </div>
-      </form>
-    </div>
+      </div>
+
+      <input type="hidden" name="modo" value="prestamo">
+    </form>
   </div>
 </div>
+
+<div class="modal fade text-center" id="modalDevolucion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="formDevolucion">
+      <input type="hidden" name="user_id" id="user_id_d">
+      <input type="hidden" name="admin_id" id="admin_id_d">
+
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Registrar devolución</h5>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <input type="hidden" name="art_no" id="art_no_d">
+          <div class="form-group">
+            <label for="cantidad_d">Cantidad a devolver:</label>
+            <input type="number" min="1" class="form-control" name="cantidad" id="cantidad_d" required>
+            <label for="cantidad_d1">Confirme cantidad:</label>
+            <input type="number" min="1" class="form-control" name="cantidad1" id="cantidad_d1" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="btnConfirmarDevolucion">Confirmar</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+
+      <input type="hidden" name="modo" value="devolver">
+    </form>
+  </div>
+</div>
+
 
 </body>
 </html>

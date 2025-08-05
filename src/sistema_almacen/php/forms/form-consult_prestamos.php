@@ -91,6 +91,7 @@ if ($deudas === false) {
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
                     <tr>
+                        <th>TIPO</th>
                         <th>NUMERO</th>
                         <th>NOMBRE</th>
                         <th>NOMPAR</th>
@@ -103,28 +104,23 @@ if ($deudas === false) {
                         <th>DEUDOR</th>
                     </tr>
                 </thead>
-            <tbody>
-                <?php if (!empty($deudas)): ?>
+                <tbody>
                 <?php foreach ($deudas as $p): ?>
                     <tr>
-                        <td class="editable"><?= htmlspecialchars($p['NUMERO'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['NOMBRE'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['NOMPAR'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['TIPMOV'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['FECHA'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['ENCARGADO'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['HORA'] ?? 'N/A') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['CANT0MULTA'] ?? '0') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['REAL_VAL'] ?? '0') ?></td>
-                        <td class="editable"><?= htmlspecialchars($p['DEUDOR'] ?? '0') ?></td>
+                        <td class="tipo-cell"><?= htmlspecialchars($p['TIPO'] ?? '') ?></td>
+                        <td><?= htmlspecialchars($p['NUMERO'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['NOMBRE'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['NOMPAR'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['TIPMOV'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['FECHA'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['ENCARGADO'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['HORA'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($p['CANT0MULTA'] ?? '0') ?></td>
+                        <td><?= htmlspecialchars($p['REAL_VAL'] ?? '0') ?></td>
+                        <td><?= htmlspecialchars($p['DEUDOR'] ?? '0') ?></td>
                     </tr>
                 <?php endforeach; ?>
-                <?php else: ?>
-                <tr>
-                    <td colspan="5" class="text-center text-muted">No hay equipos en préstamo actualmente.</td>
-                </tr>
-                <?php endif; ?>
-            </tbody>
+                </tbody>
             </table>
         </div>
         
@@ -302,6 +298,27 @@ if ($deudas === false) {
 
                     paginateTable(visibles);
                 }
+
+                // Colorear celdas de TIPO en devoluciones pendientes
+                $('.tipo-cell').each(function () {
+                    const tipo = $(this).text().trim().toLowerCase();
+
+                    switch (tipo) {
+                        case 'equipo':
+                            $(this).addClass('bg-primary text-white');
+                            break;
+                        case 'conexión':
+                            $(this).addClass('bg-success text-white');
+                            break;
+                        case 'chip':
+                            $(this).addClass('bg-warning');
+                            break;
+                        default:
+                            $(this).addClass('bg-danger text-white');
+                            break;
+                    }
+                });
+
 
                 // Botones de navegación
                 function nextPage(){

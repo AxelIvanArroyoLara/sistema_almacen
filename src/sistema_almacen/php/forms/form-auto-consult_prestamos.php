@@ -90,6 +90,7 @@ if ($prestamos === false) {
             <table class="table table-striped table-bordered">
                 <thead class="thead-dark">
                     <tr>
+                        <th>Tipo</th>
                         <th>Artículo</th>
                         <th>Fecha</th>
                         <th>Hora</th>
@@ -97,17 +98,18 @@ if ($prestamos === false) {
                         <th>Encargado</th>
                     </tr>
                 </thead>
-            <tbody>
-                <?php if (!empty($deuda)): ?>
-                <?php foreach ($deuda as $p): ?>
-                    <tr>
-                        <td><?= htmlspecialchars($p['NOMPAR']) ?></td>
-                        <td><?= htmlspecialchars($p['FECHA']) ?></td>
-                        <td><?= htmlspecialchars($p['HORA']) ?></td>
-                        <td><?= htmlspecialchars($p['CANT0MULTA']) ?></td>
-                        <td><?= htmlspecialchars($p['ENCARGADO']) ?></td>
-                    </tr>
-                <?php endforeach; ?>
+                <tbody>
+                    <?php if (!empty($deuda)): ?>
+                    <?php foreach ($deuda as $p): ?>
+                        <tr>
+                            <td class="tipo-cell"><?= htmlspecialchars($p['TIPO']) ?></td>
+                            <td><?= htmlspecialchars($p['NOMPAR']) ?></td>
+                            <td><?= htmlspecialchars($p['FECHA']) ?></td>
+                            <td><?= htmlspecialchars($p['HORA']) ?></td>
+                            <td><?= htmlspecialchars($p['CANT0MULTA']) ?></td>
+                            <td><?= htmlspecialchars($p['ENCARGADO']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 <?php else: ?>
                 <tr>
                     <td colspan="5" class="text-center text-muted">No hay equipos en préstamo actualmente.</td>
@@ -254,6 +256,27 @@ if ($prestamos === false) {
                             $('#message').html('<div class="alert alert-danger">Error al eliminar</div>');
                         }
                     });
+                });
+
+                // Colorear celdas de TIPO en devoluciones pendientes
+                $('.table tbody tr').each(function () {
+                    const tipoCell = $(this).find('td.tipo-cell');
+                    const tipo = tipoCell.text().trim().toLowerCase();
+
+                    switch (tipo) {
+                        case 'equipo':
+                            tipoCell.addClass('bg-primary text-white');
+                            break;
+                        case 'conexión':
+                            tipoCell.addClass('bg-success text-white');
+                            break;
+                        case 'chip':
+                            tipoCell.addClass('bg-warning');
+                            break;
+                        default:
+                            tipoCell.addClass('bg-danger text-white');
+                            break;
+                    }
                 });
 
                 // Filtros y paginación

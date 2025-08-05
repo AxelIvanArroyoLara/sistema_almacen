@@ -2,36 +2,116 @@
 require_once 'conn.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $art_no = $_POST['art_no'] ?? '';
-    $user_id = $_POST['user_id'] ?? '';
-    $admin_id = $_POST['admin_id'] ?? '';
+    $art_no   = trim($_POST['art_no'] ?? '');
+    $cantidad = (int)($_POST['cantidad'] ?? 0);
+    $modo     = trim($_POST['modo'] ?? '');
+    $user_id  = trim($_POST['user_id'] ?? '');
+    $admin_id = trim($_POST['admin_id'] ?? '');
 
-    if (empty($art_no) || empty($user_id) || empty($admin_id)) {
-        echo 'error: Datos faltantes';
+    if (empty($art_no) || $cantidad <= 0 || $modo !== 'devolver') {
+        echo 'Error: Datos inválidos o incompletos.';
         exit;
     }
 
     try {
-        $stmtUser = $connection->prepare("SELECT NUMERO AS numero, NOMBRE AS nombre FROM usuarios WHERE NUMERO = :user_id");
-        $stmtUser->execute([':user_id' => $user_id]);
-        $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+        // Verificar chip
+        $stmt = $connection->prepare("SELECT PRECIO FROM chips WHERE ART_NO = :art_no");
+        $stmt->execute([':art_no' => $art_no]);
+        $chip = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $stmt = $connection->prepare("INSERT INTO prim14a (NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR)
-                                      VALUES (:numero, :nombre, :nompar, 'DEVOLUCION', CURRENT_DATE, :encargado, :hora, 0, 0, 0)");
-        $stmt->execute([
-            ':numero' => $user['numero'],
-            ':nombre' => $user['nombre'],
-            ':nompar' => $art_no,
-            ':encargado' => $admin_id,
-            ':hora' => date('Hi'),
+        if (!$chip) {
+            echo 'Error: Chip no encontrado.';
+            exit;
+        }
+
+        // Verificar usuario
+        $stmtUser = $connection->prepare("
+            SELECT NUMERO AS numero_control, NOMBRE AS nombre_completo 
+            FROM usuarios 
+            WHERE NUMERO = :user_id
+        ");
+        $stmtUser->execute([':user_id' => $user_id]);
+        $usuario = $stmtUser->fetch(PDO::FETCH_ASSOC);
+
+        if (!$usuario) {
+            echo 'Error: Usuario no encontrado.';
+            exit;
+        }
+
+        // Aumentar existencia
+        $stmtUpdate = $connection->prepare("
+            UPDATE chips SET EXISTENCIA = EXISTENCIA + :cantidad WHERE ART_NO = :art_no
+        ");
+        $stmtUpdate->execute([
+            ':cantidad' => $cantidad,
+            ':art_no'   => $art_no
         ]);
 
-        $connection->prepare("UPDATE chips SET EXISTENCIA = EXISTENCIA + 1 WHERE ART_NO = :art_no")
-                   ->execute([':art_no' => $art_no]);
+        // Registrar en prim14a
+        $stmtInsert = $connection->prepare("
+            INSERT INTO prim14a (
+                NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA,
+                CANT0MULTA, REAL_VAL, DEUDOR
+            ) VALUES (
+                :numero, :nombre, :nompar, 'DEVOLUCIÓN', CURRENT_DATE, :encargado, :hora,
+                :cantidad, 0, 0
+            )
+        ");
+        $stmtInsert->execute([
+            ':numero'    => $usuario['numero_control'],
+            ':nombre'    => $usuario['nombre_completo'],
+            ':nompar'    => $art_no,
+            ':encargado' => $admin_id,
+            ':hora'      => date('H:i:s'),
+            ':cantidad'  => $cantidad
+        ]);
+
+        // Validar préstamo activo
+        $stmtSelect = $connection->prepare("
+            SELECT CANT0MULTA FROM prestamos
+            WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
+        ");
+        $stmtSelect->execute([
+            ':numero' => $usuario['numero_control'],
+            ':nompar' => $art_no
+        ]);
+        $prestamo = $stmtSelect->fetch(PDO::FETCH_ASSOC);
+
+        if (!$prestamo) {
+            echo 'Error: No se encontró préstamo activo.';
+            exit;
+        }
+
+        $restante = (int)$prestamo['CANT0MULTA'] - $cantidad;
+
+        if ($restante <= 0) {
+            // Eliminar el préstamo
+            $stmtDelete = $connection->prepare("
+                DELETE FROM prestamos
+                WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
+            ");
+            $stmtDelete->execute([
+                ':numero' => $usuario['numero_control'],
+                ':nompar' => $art_no
+            ]);
+        } else {
+            // Actualizar préstamo
+            $stmtUpdate = $connection->prepare("
+                UPDATE prestamos SET CANT0MULTA = :restante
+                WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
+            ");
+            $stmtUpdate->execute([
+                ':restante' => $restante,
+                ':numero'   => $usuario['numero_control'],
+                ':nompar'   => $art_no
+            ]);
+        }
 
         echo 'success';
     } catch (PDOException $e) {
-        echo 'error: ' . $e->getMessage();
+        echo 'Error en la base de datos: ' . htmlspecialchars($e->getMessage());
     }
+} else {
+    echo 'Error: Método no permitido.';
 }
-?>
+

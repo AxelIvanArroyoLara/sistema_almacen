@@ -49,13 +49,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insertar en prestamos
         $sqlInsertPrestamos = "
             INSERT INTO prestamos (
-                NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
+                TIPO, NUMERO, NOMBRE, NOMPAR, TIPMOV, FECHA, ENCARGADO, HORA, CANT0MULTA, REAL_VAL, DEUDOR
             ) VALUES (
-                :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 1, 0, 1
+                :tipo, :numero, :nombre, :nompar, :tipmov, CURRENT_DATE, :encargado, :hora, 1, 0, 1
             )
         ";
         $stmtInsertPrestamos = $connection->prepare($sqlInsertPrestamos);
         $stmtInsertPrestamos->execute([
+            ':tipo'      => 'Equipo',
             ':numero'    => $usuario['numero_control'],
             ':nombre'    => $usuario['nombre_completo'],
             ':nompar'    => $numero_ser,

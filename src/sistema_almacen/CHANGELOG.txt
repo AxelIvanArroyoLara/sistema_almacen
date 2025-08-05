@@ -6,7 +6,12 @@ Lectura:
 
 -----Versión más reciente-----
 
-24/07/2025: Alpha 0.6.7.13
+05/08/2025: Alpha 0.6.10.4
+- Corregido el sistema de préstamos y devoluciones para chips.
+- Añadida nueva columna de tipos para la tabla de devoluciones pendientes.
+- Añadida funcionalidad para distinguir los tipos de elementos por colores.
+
+24/07/2025: Alpha 0.6.7.2
 - Corregido error que permitía devoluciones de usuarios indeseados.
 - Añadido el nuevo sistema de confirmación numérico para préstamo y devolución de
 conexiones.
