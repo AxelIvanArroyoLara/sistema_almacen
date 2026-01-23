@@ -1,5 +1,12 @@
 <?php
+session_start();
 include_once '../modules/conn.php';
+
+// Verificar que el usuario es administrador
+if (!isset($_SESSION['admin-id'])) {
+    header("Location: credentials/form-estadisticas-check_admin_id.php");
+    exit;
+}
 
 $query = "
     SELECT p.*

@@ -323,7 +323,7 @@ $conexiones = getConexiones($connection);
         </button>
       </div>
       <div class="modal-body">
-        <form id="addForm">
+        <form id="addForm" autocomplete="off">
           <div class="form-row">
             <div class="form-group col-md-3"><label>ART_NO</label><input type="text" class="form-control" name="ART_NO" required></div>
             <div class="form-group col-md-3"><label>POSICIONX</label><input type="text" class="form-control" name="POSICIONX" required></div>

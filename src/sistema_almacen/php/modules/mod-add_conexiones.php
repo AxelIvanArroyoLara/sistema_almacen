@@ -1,6 +1,7 @@
 <?php
 require_once 'conn.php';
-
+require_once 'security.php';
+requireAdminAuthentication();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $art_no     = $_POST['ART_NO']     ?? '';
     $posicionx  = $_POST['POSICIONX']  ?? '';
@@ -28,3 +29,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo 'error: ' . $e->getMessage();
     }
 }
+

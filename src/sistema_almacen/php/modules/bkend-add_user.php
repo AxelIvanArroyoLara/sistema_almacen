@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Ejecutar la declaración SQL con los valores del formulario
     try {
-        $stmt->execute([ //181763
+        $stmt->execute([
             ':user_id' => $user_id,
             ':user_name' => $user_name,
             ':user_level' => $user_level,

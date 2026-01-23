@@ -73,7 +73,7 @@ $horas_totales = gmdate("H:i:s", $total_segundos);
             <h5 class="text-center">Total acumulado: <strong><?= $horas_totales ?></strong></h5>
             <br>
             <!-- Formulario de registro -->
-            <form action="../modules/bkend-beca-time.php" method="POST" class="text-center mb-4">
+            <form action="../modules/bkend-beca-time.php" method="POST" class="text-center mb-4" autocomplete="off">
                 <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id) ?>">
                 <button name="accion" value="entrada" class="btn btn-success btn-lg mr-2">Registrar Entrada</button>
                 <button name="accion" value="salida" class="btn btn-danger btn-lg">Registrar Salida</button>

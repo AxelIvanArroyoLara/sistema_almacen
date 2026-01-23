@@ -9,7 +9,7 @@ function getEquipments($connection) {
     
     // Check for errors in query execution
     if (!$stmt->execute()) {
-        echo "Error executing query: " . $stmt->errorInfo()[2];
+        echo "Error executing query: "  . "Procesar datos";
         return false; // Return false on error
     }
     
@@ -23,7 +23,7 @@ function getEquipmentBySerial($connection, $numero_ser) {
     
     // Check for errors in query execution
     if (!$stmt->execute([':numero_ser' => $numero_ser])) {
-        echo "Error executing query: " . $stmt->errorInfo()[2];
+        echo "Error executing query: "  . "Procesar datos";
         return false;
     }
 
@@ -47,7 +47,7 @@ function updateEquipment($connection, $numero_ser, $aparato, $marca, $modelo, $e
         ':status' => $status,
         ':fecha_inv' => $fecha_inv
     ])) {
-        echo "Error updating equipment: " . $stmt->errorInfo()[2];
+        echo "Error updating equipment: "  . "Procesar datos";
     }
 }
 
@@ -58,7 +58,7 @@ function deleteEquipment($connection, $numero_ser) {
     
     // Check for errors in query execution
     if (!$stmt->execute([':numero_ser' => $numero_ser])) {
-        echo "Error deleting equipment: " . $stmt->errorInfo()[2];
+        echo "Error deleting equipment: "  . "Procesar datos";
     }
 }
 
@@ -109,3 +109,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+

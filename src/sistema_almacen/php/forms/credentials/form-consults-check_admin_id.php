@@ -43,7 +43,7 @@
     <!-- Contenedor principal para el formulario -->
     <div class="container-general">
         <div class="box-white">
-            <form action="../../modules/credentials/bkend-consults-check_admin_id.php" method="POST">
+            <form action="../../modules/credentials/bkend-consults-check_admin_id.php" method="POST" autocomplete="off">
                 <div class="form-group">
                     <br><br>
                     <label for="admin-id">Ingrese el ID de un administrador</label>

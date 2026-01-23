@@ -108,8 +108,8 @@ $conexiones = getConexiones($connection);
 <script>
 $(function () {
     /* ----------  variables globales  ---------- */
-    const user_id  = <?= json_encode($user_id) ?>;
-    const admin_id = <?= json_encode($admin_id) ?>;
+    const user_id  = <?= json_encode(htmlspecialchars($user_id ?? '', ENT_QUOTES, 'UTF-8')) ?>;
+    const admin_id = <?= json_encode(htmlspecialchars($admin_id ?? '', ENT_QUOTES, 'UTF-8')) ?>;
     let currentPage = 1, rowsPerPage = 10;
 
     function validarCantidad(modal, input1, input2, boton) {
@@ -218,7 +218,7 @@ $(function () {
 <!-- ······························· MODAL PRÉSTAMO ··························· -->
 <div class="modal fade text-center" id="modalPrestamo" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formPrestamo">
+    <form id="formPrestamo" autocomplete="off">
       <input type="hidden" name="user_id"  id="user_id_p">
       <input type="hidden" name="admin_id" id="admin_id_p">
 
@@ -255,7 +255,7 @@ $(function () {
 <!-- ─────────────────── MODAL DEVOLUCIÓN ─────────────────── -->
 <div class="modal fade text-center" id="modalDevolucion" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formDevolucion">
+    <form id="formDevolucion" autocomplete="off">
       <input type="hidden" name="user_id"  id="user_id_d">
       <input type="hidden" name="admin_id" id="admin_id_d">
 

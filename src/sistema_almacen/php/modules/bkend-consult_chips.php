@@ -8,7 +8,7 @@ function getChips($connection) {
     $stmt = $connection->prepare($sql);
 
     if (!$stmt->execute()) {
-        echo "Error al ejecutar la consulta: " . $stmt->errorInfo()[2];
+        echo "Error al ejecutar la consulta: "  . "Procesar datos";
         return [];
     }
 
@@ -37,7 +37,7 @@ function updateChip($connection, $art_no, $posicionx, $etiqueta, $conector, $des
         ':descrip2'   => $descrip2,
         ':existencia' => $existencia
     ])) {
-        echo "Error al actualizar: " . $stmt->errorInfo()[2];
+        echo "Error al actualizar: "  . "Procesar datos";
     } else {
         echo "success";
     }
@@ -49,7 +49,7 @@ function deleteChip($connection, $art_no) {
     $stmt = $connection->prepare($sql);
 
     if (!$stmt->execute([':art_no' => $art_no])) {
-        echo "Error al eliminar: " . $stmt->errorInfo()[2];
+        echo "Error al eliminar: "  . "Procesar datos";
     } else {
         echo "success";
     }
@@ -77,4 +77,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
