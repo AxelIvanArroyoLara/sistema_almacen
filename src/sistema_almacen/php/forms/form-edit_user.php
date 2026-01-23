@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuario</title>
     <link rel="stylesheet" href="../../css/styles.css">
-    <link rel="stylesheet" href="../../css/styles-edituser.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         input[type="text"], input[type="email"], input[type="password"] {
@@ -118,13 +117,13 @@
                             }
 
                             // Llenar los campos del formulario con los datos del usuario
-                            document.getElementById('user-id').value = checkNull(data.numero); 
-                            document.getElementById('user-name').value = checkNull(data.nombre); 
-                            document.getElementById('user-level').value = checkNull(data.nivel); 
-                            document.getElementById('user-absences').value = checkNull(data.faltas); 
-                            document.getElementById('user-status').value = checkNull(data.status); 
-                            document.getElementById('user-email').value = checkNull(data.e_mail); 
-                            document.getElementById('user-phone').value = checkNull(data.telefono);
+                            document.getElementById('user-id').value = checkNull(data.NUMERO); 
+                            document.getElementById('user-name').value = checkNull(data.NOMBRE); 
+                            document.getElementById('user-level').value = checkNull(data.NIVEL); 
+                            document.getElementById('user-absences').value = checkNull(data.FALTAS); 
+                            document.getElementById('user-status').value = checkNull(data.STATUS); 
+                            document.getElementById('user-email').value = checkNull(data.E_MAIL); 
+                            document.getElementById('user-phone').value = checkNull(data.TELEFONO);
                         } else {
                             alert(data.error);
                         }

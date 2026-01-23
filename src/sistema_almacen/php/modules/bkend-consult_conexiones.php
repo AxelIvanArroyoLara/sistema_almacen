@@ -9,7 +9,7 @@ function getConexiones($connection) {
     
     // Verificar errores en la ejecución de la consulta
     if (!$stmt->execute()) {
-        echo "Error ejecutando la consulta: " . $stmt->errorInfo()[2];
+        echo "Error ejecutando la consulta: "  . "Procesar datos";
         return false; // Devolver false en caso de error
     }
     
@@ -23,7 +23,7 @@ function getConexionByArtNo($connection, $art_no) {
     
     // Verificar errores en la ejecución de la consulta
     if (!$stmt->execute([':art_no' => $art_no])) {
-        echo "Error ejecutando la consulta: " . $stmt->errorInfo()[2];
+        echo "Error ejecutando la consulta: "  . "Procesar datos";
         return false;
     }
 
@@ -48,7 +48,7 @@ function updateConexion($connection, $art_no, $posicionx, $etiqueta, $conector, 
         ':descripcion2' => $descripcion2,
         ':existencia' => $existencia
     ])) {
-        echo "Error actualizando la conexión: " . $stmt->errorInfo()[2];
+        echo "Error actualizando la conexión: "  . "Procesar datos";
     }
 }
 
@@ -59,7 +59,7 @@ function deleteConexion($connection, $art_no) {
     
     // Verificar errores en la ejecución de la consulta
     if (!$stmt->execute([':art_no' => $art_no])) {
-        echo "Error eliminando la conexión: " . $stmt->errorInfo()[2];
+        echo "Error eliminando la conexión: "  . "Procesar datos";
     }
 }
 
@@ -88,3 +88,4 @@ function processRequest($connection) {
     }
 }
 ?>
+

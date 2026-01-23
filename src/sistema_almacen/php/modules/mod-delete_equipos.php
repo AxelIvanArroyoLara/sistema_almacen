@@ -31,3 +31,4 @@ if (isset($_POST['id'])) {
     echo 'ID del equipo no proporcionado.';  // Si no se recibe el ID
 }
 ?>
+

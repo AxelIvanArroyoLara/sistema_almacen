@@ -1,5 +1,8 @@
 <?php
 require_once 'conn.php';
+require_once 'security.php';
+
+requireUserAuthentication();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $art_no   = trim($_POST['art_no'] ?? '');

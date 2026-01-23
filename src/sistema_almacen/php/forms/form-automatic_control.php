@@ -10,10 +10,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Configura la escala y dimensiones para que sea adaptable en dispositivos móviles -->
     <title>preview-almacen</title>
-    <!-- Define el título de la página que se mostrará en la pestaña del navegador -->
-
-    <!-- Enlace a la hoja de estilos personalizada para la página de control automático -->
-    <link rel="stylesheet" href="../css/control-automatico.css">
     <!-- Enlace a la hoja de estilos general para la página -->
     <link rel="stylesheet" href="../css/styles.css">
     <!-- Enlace al archivo de estilos CSS de Bootstrap desde un CDN -->

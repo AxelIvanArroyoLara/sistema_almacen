@@ -1,5 +1,8 @@
 <?php
 require_once 'conn.php';
+require_once 'security.php';
+
+requireUserAuthentication();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $numero_ser = trim($_POST['numero_ser'] ?? '');

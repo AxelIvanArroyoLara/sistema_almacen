@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->bindParam(':posicion', $posicion);
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':id', $id);
-//181763
+
     if ($stmt->execute()) {
         echo 'success';
     } else {
@@ -28,3 +28,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+

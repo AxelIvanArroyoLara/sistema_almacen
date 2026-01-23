@@ -1,5 +1,8 @@
 <?php
 require_once 'conn.php';
+require_once 'security.php';
+
+requireAdminAuthentication();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $art_no     = $_POST['ART_NO']     ?? '';

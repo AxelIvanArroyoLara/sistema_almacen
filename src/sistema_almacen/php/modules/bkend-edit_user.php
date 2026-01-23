@@ -2,20 +2,23 @@
 
 // Incluir el archivo de conexión a la base de datos
 include_once 'conn.php';
+include_once 'security.php';
+
+requireAdminAuthentication();
 
 // Verificar si el formulario fue enviado usando el método POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-    // Recoger y sanitizar los datos del formulario
-    $user_id = filter_input(INPUT_POST, 'user-id');
-    $user_name = filter_input(INPUT_POST, 'user-name');
-    $user_level = filter_input(INPUT_POST, 'user-level');
-    $user_absences = filter_input(INPUT_POST, 'user-absences');
-    $user_status = filter_input(INPUT_POST, 'user-status');
-    $user_email = filter_input(INPUT_POST, 'user-email');
-    $user_phone = filter_input(INPUT_POST, 'user-phone');
-    $user_password = filter_input(INPUT_POST, 'user-password');
-    $user_password_confirm = filter_input(INPUT_POST, 'user-password-confirm');
+    // Recoger y validar datos del formulario
+    $user_id = filter_input(INPUT_POST, 'user-id', FILTER_VALIDATE_INT);
+    $user_name = filter_input(INPUT_POST, 'user-name', FILTER_SANITIZE_STRING);
+    $user_level = filter_input(INPUT_POST, 'user-level', FILTER_SANITIZE_STRING);
+    $user_absences = filter_input(INPUT_POST, 'user-absences', FILTER_VALIDATE_INT);
+    $user_status = filter_input(INPUT_POST, 'user-status', FILTER_SANITIZE_STRING);
+    $user_email = filter_input(INPUT_POST, 'user-email', FILTER_VALIDATE_EMAIL);
+    $user_phone = filter_input(INPUT_POST, 'user-phone', FILTER_SANITIZE_STRING);
+    $user_password = filter_input(INPUT_POST, 'user-password', FILTER_SANITIZE_STRING);
+    $user_password_confirm = filter_input(INPUT_POST, 'user-password-confirm', FILTER_SANITIZE_STRING);
 
     // Validación de que las contraseñas coinciden (solo si se cambian)
     if (!empty($user_password) && $user_password !== $user_password_confirm) {

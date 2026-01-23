@@ -1,8 +1,12 @@
 <?php
 
 include_once 'conn.php';
+include_once 'security.php';
 
-$sql_reader = 'SELECT * FROM usuarios';
+// Solo admins pueden ver esto
+requireAdminAuthentication();
+
+$sql_reader = 'SELECT NUMERO, NOMBRE, NIVEL, STATUS FROM usuarios';
 
 $gsent = $connection->prepare($sql_reader);
 $gsent->execute();
@@ -19,7 +23,6 @@ foreach ($user_info as $row) {
         echo $column . "\t";
     }
     echo "\n";
-    //root:2C603
 }
 
 ?>

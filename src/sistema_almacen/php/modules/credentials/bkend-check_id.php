@@ -1,5 +1,4 @@
 <?php
-//root:2C603
 
 // Incluir el archivo de conexión a la base de datos
 include_once '../conn.php';
@@ -11,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user_id = htmlspecialchars(trim($_POST['user-id'] ?? ''));
 
     // Preparar la consulta SQL para buscar el ID en la base de datos
-    $sql_check = "SELECT * FROM usuarios WHERE NUMERO = :user_id";
+    $sql_check = "SELECT NUMERO FROM usuarios WHERE NUMERO = :user_id";
     $stmt = $connection->prepare($sql_check);
     $stmt->execute([':user_id' => $user_id]);
 

@@ -9,7 +9,7 @@ function getPrestamos($connection) {
 
     // Busca errores en cada solicitud
     if (!$stmt->execute()) {
-        echo "Error executing query: " . $stmt->errorInfo()[2];
+        echo "Error executing query: "  . "Procesar datos";
         return false;
     }
 
@@ -41,7 +41,7 @@ function getPrestamoByID($connection, $numero) {
 
     // Busca errores en cada solicitud
     if (!$stmt->execute(['numero' => $numero])) {
-        echo "Error executing query: " . $stmt->errorInfo()[2];
+        echo "Error executing query: "  . "Procesar datos";
         return false;
     }
 
@@ -66,7 +66,7 @@ function updatePrestamo($connection, $numero, $nompar, $tipmov, $fecha, $encarga
         ':real_val'    => $real_val,
         ':deudor'      => $deudor
     ])) {
-        echo "Error updating the registry: " . $stmt->errorInfo()[2];
+        echo "Error updating the registry: "  . "Procesar datos";
     }
 }
 
@@ -77,7 +77,7 @@ function deletePrestamo($connection, $numero) {
 
     // Busca errores en cada solicitud
     if (!$stmt->execute([':numero' => $numero])) {
-        echo "Error deleting the registry: " . $stmt->errorInfo()[2]; 
+        echo "Error deleting the registry: "  . "Procesar datos"; 
     }
 }
 

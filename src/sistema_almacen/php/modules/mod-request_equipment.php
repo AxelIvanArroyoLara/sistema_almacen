@@ -1,5 +1,8 @@
 <?php
 require_once 'conn.php';
+require_once 'security.php';
+
+requireUserAuthentication();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Recuperar y sanitizar datos del POST

@@ -33,3 +33,4 @@ if (isset($_POST['art_no'])) {
     echo 'ART_NO no proporcionado';  // Si no se recibe ART_NO
 }
 ?>
+

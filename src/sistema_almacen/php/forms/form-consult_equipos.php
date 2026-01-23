@@ -176,19 +176,20 @@ if (isset($_GET['numero_ser'])) {
                     method: 'POST',
                     data: { id, aparato, marca, modelo, encargado, posicion, status },
                     success: function(resp) {
+                        resp = resp.trim();
                         if (resp === 'success') {
-                            $('#message').text('Cambios guardados correctamente').fadeIn();
+                            $('#message').text('Cambios guardados correctamente').removeClass('alert-danger').addClass('alert-success').show();
                             row.find('.editable').attr('contenteditable', 'false');
                             row.find('.save').removeClass('save btn-success')
                                             .addClass('edit btn-primary')
                                             .text('Editar');
                             setTimeout(function(){ $('#message').fadeOut(); }, 3000);
                         } else {
-                            $('#message').html('<div class="alert alert-danger">' + resp + '</div>');
+                            $('#message').html('Error al editar').removeClass('alert-success').addClass('alert-danger').show();
                         }
                     },
                     error: function() {
-                        $('#message').html('<div class="alert alert-danger">Error al editar</div>');
+                        $('#message').html('Error en la solicitud').removeClass('alert-success').addClass('alert-danger').show();
                     }
                 });
             });

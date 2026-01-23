@@ -12,23 +12,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // Verificar que el usuario existe
-        $stmt_user = $connection->prepare("SELECT * FROM usuarios WHERE NUMERO = :user_id");
+        // Verificar que el usuario existe - solo traer CLAVE para validar
+        $stmt_user = $connection->prepare("SELECT NUMERO, NOMBRE, CLAVE FROM usuarios WHERE NUMERO = :user_id");
         $stmt_user->execute([':user_id' => $user_id_input]);
         $user_exists = $stmt_user->fetch(PDO::FETCH_ASSOC);
 
         // Verificar que el administrador existe en la tabla empleado
-        $stmt_admin = $connection->prepare("SELECT * FROM empleado WHERE NUMERO = :admin_id");
+        $stmt_admin = $connection->prepare("SELECT NUMERO FROM empleado WHERE NUMERO = :admin_id");
         $stmt_admin->execute([':admin_id' => $admin_id_input]);
         $admin_exists = $stmt_admin->fetch(PDO::FETCH_ASSOC);
 
-        // Validar contraseña del usuario
-        $stmt_auth = $connection->prepare("SELECT * FROM usuarios WHERE NUMERO = :user_id AND CLAVE = :user_password");
-        $stmt_auth->execute([
-            ':user_id' => $user_id_input,
-            ':user_password' => $user_password_input
-        ]);
-        $user_auth = $stmt_auth->fetch(PDO::FETCH_ASSOC);
+        // Validar contraseña del usuario usando password_verify
+        $user_auth = false;
+        if ($user_exists && !empty($user_exists['CLAVE'])) {
+            $user_auth = password_verify($user_password_input, $user_exists['CLAVE']);
+        }
 
         // Verificar autenticación completa
         if ($user_exists && $admin_exists && $user_auth) {
