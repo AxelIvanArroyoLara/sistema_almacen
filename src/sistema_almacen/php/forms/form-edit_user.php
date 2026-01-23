@@ -40,7 +40,7 @@
     <div class="container-general">
         <div class="box-white">
             <!-- El formulario envía los datos al backend en bkend-edit_user.php -->
-            <form id="user-form" action="../modules/bkend-edit_user.php" method="POST">
+            <form id="user-form" action="../modules/bkend-edit_user.php" method="POST" autocomplete="off">
                 <div class="form-group">
                     <label for="user-id">ID</label>
                     <input type="text" class="form-control" id="user-id" name="user-id" readonly>

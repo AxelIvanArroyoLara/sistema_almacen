@@ -32,7 +32,7 @@
     <div class="container-general">
 
         <div class="box-white">
-            <form action="php/modules/admin/bkend-change-semester.php" method="POST">
+            <form action="php/modules/admin/bkend-change-semester.php" method="POST" autocomplete="off">
                 <div class="form-group text-center">
                     <br><br>
                     <header class="encabezado-wrapper my-5">

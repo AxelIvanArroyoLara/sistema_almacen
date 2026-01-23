@@ -38,7 +38,7 @@
     </header>
     <div class="container-general">
         <div class="box-white">
-            <form id="user-form" action="../modules/bkend-add_user.php" method="POST">
+            <form id="user-form" action="../modules/bkend-add_user.php" method="POST" autocomplete="off">
                 <div class="form-group">
                     <label for="user-id">ID</label>
                     <input type="text" class="form-control" id="user-id" name="user-id" pattern="[0-9]+" required placeholder="Ingrese su ID de estudiante">

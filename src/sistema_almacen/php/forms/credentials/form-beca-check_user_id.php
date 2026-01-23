@@ -40,7 +40,7 @@
     <!-- Contenedor principal para el formulario -->
     <div class="container-general">
         <div class="box-white">
-            <form action="../../modules/credentials/bkend-beca-check_user_id.php" method="POST">
+            <form action="../../modules/credentials/bkend-beca-check_user_id.php" method="POST" autocomplete="off">
                 <div class="form-group">
                     <label for="user-id">Ingrese el ID del estudiante</label>
                     <br><br>

@@ -280,7 +280,7 @@ function safe($val) {
     <div class="modal fade text-center" id="addChipModal" tabindex="-1" role="dialog" aria-labelledby="addChipModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-xl" role="document">
     <div class="modal-content">
-      <form id="addChipForm">
+      <form id="addChipForm" autocomplete="off">
         <div class="modal-header">
           <h5 class="modal-title" id="addChipModalLabel">Agregar nuevo chip</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">

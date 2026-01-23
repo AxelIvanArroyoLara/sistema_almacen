@@ -356,7 +356,7 @@ if (isset($_GET['numero_ser'])) {
         </button>
       </div>
       <div class="modal-body text-center">
-        <form id="addForm">
+        <form id="addForm" autocomplete="off">
           <div class="form-row">
             <div class="form-group col-md-3">
               <label>Aparato</label>

@@ -6,6 +6,7 @@
     <title>Verificación de Administrador - Estadísticas</title>
     <link rel="stylesheet" href="../../../css/styles.css">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
 </head>
 <body>
     <!-- Barra de navegación principal -->
@@ -31,12 +32,12 @@
 
     <div class="container-general">
         <div class="box-white">
-            <form action="../../modules/credentials/bkend-estadisticas-check_admin_id.php" method="POST">
+            <form action="../../modules/credentials/bkend-estadisticas-check_admin_id.php" method="POST" autocomplete="off">
                 <div class="form-group">
                     <br><br>
                     <label for="admin-id">Ingrese el ID de un administrador</label>
                     <br><br>
-                    <input type="text" class="form-control" id="admin-id" name="admin-id" required placeholder="Ingrese el ID de un administrador" pattern="[0-9]+">
+                    <input type="text" class="form-control" id="admin-id" name="admin-id" required placeholder="Ingrese el ID de un administrador" pattern="[0-9]+" autocomplete="off">
                     <br><br>
                 </div>
                 <button type="submit" class="btn btn-primary btn-lg">Verificar</button>
@@ -44,5 +45,6 @@
             </form>
         </div>
     </div>
+    <script src="../../../js/disable-autocomplete.js"></script>
 </body>
 </html>
