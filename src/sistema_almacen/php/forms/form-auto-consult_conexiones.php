@@ -154,7 +154,7 @@ $(function () {
     $(document).on('click', '.devolver', function () {
         const art = $(this).data('id');
         $('#art_no_d').val(art);
-        $('#cantidad_d').val(1);
+        $('#cantidad_d').val('');
         $('#user_id_d').val(user_id);
         $('#admin_id_d').val(admin_id);
         $('#modalDevolucion').modal('show');

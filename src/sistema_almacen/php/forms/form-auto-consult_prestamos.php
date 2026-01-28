@@ -106,6 +106,7 @@ if ($prestamos === false) {
                         <th>Hora</th>
                         <th>Cantidad</th>
                         <th>Encargado</th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -118,6 +119,14 @@ if ($prestamos === false) {
                             <td><?= htmlspecialchars($p['HORA']) ?></td>
                             <td><?= htmlspecialchars($p['CANT0MULTA']) ?></td>
                             <td><?= htmlspecialchars($p['ENCARGADO']) ?></td>
+                            <td>
+                                <button class="btn btn-sm btn-success devolver-btn" 
+                                        data-tipo="<?= htmlspecialchars($p['TIPO']) ?>"
+                                        data-articulo="<?= htmlspecialchars($p['NOMPAR']) ?>"
+                                        data-cantidad="<?= htmlspecialchars($p['CANT0MULTA']) ?>">
+                                    Devolver
+                                </button>
+                            </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php else: ?>
@@ -342,5 +351,132 @@ if ($prestamos === false) {
                 // Primera carga
                 filterTable();
 
+                // Manejo del botón de devolver (usar delegación de eventos)
+                $(document).on('click', '.devolver-btn', function() {
+                    const tipo = $(this).data('tipo').toLowerCase().trim();
+                    const articulo = $(this).data('articulo');
+                    const cantidadMax = $(this).data('cantidad');
+                    
+                    $('#tipo_devolver').val(tipo);
+                    $('#articulo_devolver').val(articulo);
+                    $('#cantidad_devolver').attr('max', cantidadMax);
+                    $('#cantidad_devolver').val('');
+                    $('#cantidad_confirmar_devolver').val('');
+                    $('#articulo_nombre_modal').text(articulo);
+                    $('#cantidad_max_modal').text(cantidadMax);
+                    
+                    $('#btnConfirmarDevolucion').prop('disabled', true);
+                    $('#modalDevolucion').modal('show');
+                });
+
+                // Validación de cantidades en modal de devolución
+                $('#cantidad_devolver, #cantidad_confirmar_devolver').on('input', function() {
+                    const val1 = parseInt($('#cantidad_devolver').val(), 10);
+                    const val2 = parseInt($('#cantidad_confirmar_devolver').val(), 10);
+                    const max = parseInt($('#cantidad_devolver').attr('max'), 10);
+                    const valido = val1 > 0 && val1 <= max && val1 === val2;
+                    $('#btnConfirmarDevolucion').prop('disabled', !valido);
+                });
+
+                // Envío del formulario de devolución
+                $('#formDevolucion').on('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const tipo = $('#tipo_devolver').val();
+                    const articulo = $('#articulo_devolver').val();
+                    const cantidad = $('#cantidad_devolver').val();
+                    const userId = <?= json_encode($_SESSION['user-id'] ?? '') ?>;
+                    const adminId = <?= json_encode($_SESSION['admin-id'] ?? '') ?>;
+                    
+                    let url = '';
+                    let data = {
+                        cantidad: cantidad,
+                        user_id: userId,
+                        admin_id: adminId
+                    };
+
+                    // Determinar el módulo según el tipo
+                    if (tipo === 'chip') {
+                        url = '../modules/mod-return_chips.php';
+                        data.art_no = articulo;
+                        data.modo = 'devolver';
+                    } else if (tipo === 'equipo') {
+                        url = '../modules/mod-return_equipment.php';
+                        data.numero_ser = articulo;
+                    } else if (tipo === 'conexión' || tipo === 'conexion') {
+                        url = '../modules/mod-return_conexion.php';
+                        data.art_no = articulo;
+                        data.modo = 'devolver';
+                    } else {
+                        alert('Tipo de artículo desconocido');
+                        return;
+                    }
+
+                    $.ajax({
+                        url: url,
+                        method: 'POST',
+                        data: data,
+                        success: function(resp) {
+                            if ($.trim(resp) === 'success') {
+                                $('#message').removeClass().addClass('alert alert-success')
+                                    .text('Devolución registrada correctamente')
+                                    .fadeIn().delay(2500).fadeOut();
+                                $('#modalDevolucion').modal('hide');
+                                setTimeout(() => location.reload(), 2600);
+                            } else {
+                                $('#message').removeClass().addClass('alert alert-danger')
+                                    .text(resp).fadeIn().delay(4000).fadeOut();
+                            }
+                        },
+                        error: function() {
+                            $('#message').removeClass().addClass('alert alert-danger')
+                                .text('Error al procesar la devolución').fadeIn().delay(4000).fadeOut();
+                        }
+                    });
+                });
+
             });
         </script>
+
+<!-- Modal de devolución -->
+<div class="modal fade" id="modalDevolucion" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formDevolucion">
+            <input type="hidden" id="tipo_devolver">
+            <input type="hidden" id="articulo_devolver">
+            
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar devolución</h5>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                
+                <div class="modal-body">
+                    <p><strong>Artículo:</strong> <span id="articulo_nombre_modal"></span></p>
+                    <p><strong>Cantidad máxima:</strong> <span id="cantidad_max_modal"></span></p>
+                    
+                    <div class="form-group">
+                        <label for="cantidad_devolver">Cantidad a devolver:</label>
+                        <input type="number" min="1" class="form-control" id="cantidad_devolver" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cantidad_confirmar_devolver">Confirme cantidad:</label>
+                        <input type="number" min="1" class="form-control" id="cantidad_confirmar_devolver" required>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btnConfirmarDevolucion">Confirmar devolución</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

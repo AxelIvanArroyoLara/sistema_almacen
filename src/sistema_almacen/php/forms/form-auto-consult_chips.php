@@ -109,8 +109,8 @@ function safe($val) {
             const art_no = $(this).data('id');
 
             $('#art_no_p').val(art_no);
-            $('#cantidad_p').val(1);
-            $('#cantidad_p1').val(1);
+            $('#cantidad_p').val('');
+            $('#cantidad_p1').val('');
             $('#user_id_p').val(user_id);
             $('#admin_id_p').val(admin_id);
             $('#btnConfirmarPrestamo').prop('disabled', true);
@@ -122,8 +122,8 @@ function safe($val) {
             const art_no = $(this).data('id');
 
             $('#art_no_d').val(art_no);
-            $('#cantidad_d').val(1);
-            $('#cantidad_d1').val(1);
+            $('#cantidad_d').val('');
+            $('#cantidad_d1').val('');
             $('#user_id_d').val(user_id);
             $('#admin_id_d').val(admin_id);
             $('#btnConfirmarDevolucion').prop('disabled', true);
