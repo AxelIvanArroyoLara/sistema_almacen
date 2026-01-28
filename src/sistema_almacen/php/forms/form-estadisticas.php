@@ -58,8 +58,15 @@ $deudores = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </header>
 
     <div class="container-general">
+        <!-- Campo de búsqueda -->
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Buscar deudor por cualquier campo..." onkeyup="filterTable()">
+        </div>
+    </div>
+
+    <div class="container-general">
         <div class="box-white table-responsive">
-            <table class="table table-striped table-bordered table-hover">
+            <table class="table table-striped table-bordered table-hover" id="deudoresTable">
                 <thead class="thead-dark text-center">
                     <tr>
                         <th>NUMERO</th>
@@ -97,5 +104,24 @@ $deudores = $stmt->fetchAll(PDO::FETCH_ASSOC);
             </table>
         </div>
     </div>
+
+    <script>
+        function filterTable() {
+            var filter = document.getElementById('searchInput').value.toLowerCase();
+            var table = document.getElementById('deudoresTable');
+            var rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = rows[i];
+                var texto = row.textContent.toLowerCase();
+                
+                if (texto.indexOf(filter) !== -1) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        }
+    </script>
 </body>
 </html>
