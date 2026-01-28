@@ -1,0 +1,40 @@
+# Git
+.git
+.gitignore
+.github
+
+# Docker
+docker-compose.yaml
+Dockerfile
+.dockerignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+
+# Archivos temporales
+*.tmp
+*.bak
+*.backup
+
+# Python
+__pycache__
+*.pyc
+get-pip.py
+
+# Archivos de desarrollo
+CHANGELOG.txt
+roadmap.txt
+ideas.txt
+prueba

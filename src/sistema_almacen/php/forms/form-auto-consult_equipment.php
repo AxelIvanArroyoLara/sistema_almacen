@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/../modules/session_helper.php';
 // Incluir el módulo de conexión y consultas de equipos
 include_once '../modules/conn.php';
 include_once '../modules/bkend-consult_equipos.php';

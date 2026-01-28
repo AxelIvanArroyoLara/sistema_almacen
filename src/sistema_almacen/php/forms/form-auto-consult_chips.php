@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/../modules/session_helper.php';
 include_once '../modules/conn.php';
 include_once '../modules/bkend-consult_chips.php';
 
@@ -255,7 +255,7 @@ function safe($val) {
 
 <div class="modal fade text-center" id="modalPrestamo" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formPrestamo" autocomplete="off">
+    <form id="formPrestamo">
       <input type="hidden" name="user_id" id="user_id_p">
       <input type="hidden" name="admin_id" id="admin_id_p">
 
@@ -288,7 +288,7 @@ function safe($val) {
 
 <div class="modal fade text-center" id="modalDevolucion" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formDevolucion" autocomplete="off">
+    <form id="formDevolucion">
       <input type="hidden" name="user_id" id="user_id_d">
       <input type="hidden" name="admin_id" id="admin_id_d">
 

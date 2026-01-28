@@ -1,5 +1,15 @@
 <?php
+// Validar y limpiar ID de sesión antes de iniciar
+if (isset($_COOKIE['PHPSESSID']) && strlen($_COOKIE['PHPSESSID']) > 40) {
+    // ID de sesión demasiado largo, forzar uno nuevo
+    unset($_COOKIE['PHPSESSID']);
+    setcookie('PHPSESSID', '', time() - 3600, '/');
+}
 session_start();
+// Regenerar ID si es necesario
+if (strlen(session_id()) > 40) {
+    session_regenerate_id(true);
+}
 include_once '../modules/conn.php';
 include_once '../modules/bkend-auto-consult_prestamos.php';
 
