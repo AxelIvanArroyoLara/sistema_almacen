@@ -163,13 +163,21 @@ $(function () {
     /* ----------  submit PRÉSTAMO  ---------- */
     $('#formPrestamo').on('submit', function (e) {
         e.preventDefault();
-        $.post('../modules/mod-request_conexion.php', $(this).serialize(), handleResp);
+        // Excluir el campo de confirmación cantidad1 del envío
+        var formData = $(this).serializeArray().filter(function(field) {
+            return field.name !== 'cantidad1';
+        });
+        $.post('../modules/mod-request_conexion.php', $.param(formData), handleResp);
     });
 
     /* ----------  submit DEVOLUCIÓN  ---------- */
     $('#formDevolucion').on('submit', function (e) {
         e.preventDefault();
-        $.post('../modules/mod-return_conexion.php', $(this).serialize(), handleResp);
+        // Excluir el campo de confirmación cantidad1 del envío
+        var formData = $(this).serializeArray().filter(function(field) {
+            return field.name !== 'cantidad1';
+        });
+        $.post('../modules/mod-return_conexion.php', $.param(formData), handleResp);
     });
 
     /* ----------  respuesta común  ---------- */

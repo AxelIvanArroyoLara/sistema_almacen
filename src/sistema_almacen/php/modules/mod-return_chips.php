@@ -78,14 +78,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $prestamo = $stmtSelect->fetch(PDO::FETCH_ASSOC);
 
         if (!$prestamo) {
+            error_log("MOD-RETURN-CHIPS: No se encontró préstamo activo para usuario {$usuario['numero_control']}, chip {$art_no}");
             echo 'Error: No se encontró préstamo activo.';
             exit;
         }
 
         $restante = (int)$prestamo['CANT0MULTA'] - $cantidad;
+        error_log("MOD-RETURN-CHIPS: Usuario {$usuario['numero_control']}, chip {$art_no}, cantidad actual: {$prestamo['CANT0MULTA']}, devolviendo: {$cantidad}, restante: {$restante}");
 
         if ($restante <= 0) {
             // Eliminar el préstamo
+            error_log("MOD-RETURN-CHIPS: Eliminando préstamo completo");
             $stmtDelete = $connection->prepare("
                 DELETE FROM prestamos
                 WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
@@ -94,8 +97,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':numero' => $usuario['numero_control'],
                 ':nompar' => $art_no
             ]);
+            error_log("MOD-RETURN-CHIPS: Préstamo eliminado, filas afectadas: " . $stmtDelete->rowCount());
         } else {
             // Actualizar préstamo
+            error_log("MOD-RETURN-CHIPS: Actualizando préstamo a cantidad: {$restante}");
             $stmtUpdate = $connection->prepare("
                 UPDATE prestamos SET CANT0MULTA = :restante
                 WHERE NUMERO = :numero AND NOMPAR = :nompar AND TIPMOV = 'PRESTAMO'
@@ -105,6 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ':numero'   => $usuario['numero_control'],
                 ':nompar'   => $art_no
             ]);
+            error_log("MOD-RETURN-CHIPS: Préstamo actualizado, filas afectadas: " . $stmtUpdate->rowCount());
         }
 
         echo 'success';

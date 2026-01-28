@@ -150,13 +150,21 @@ function safe($val) {
         // Envío del formulario de préstamo
         $('#formPrestamo').on('submit', function (e) {
             e.preventDefault();
-            $.post('../modules/mod-request_chips.php', $(this).serialize(), handleResp);
+            // Excluir el campo de confirmación cantidad1 del envío
+            var formData = $(this).serializeArray().filter(function(field) {
+                return field.name !== 'cantidad1';
+            });
+            $.post('../modules/mod-request_chips.php', $.param(formData), handleResp);
         });
 
         // Envío del formulario de devolución
         $('#formDevolucion').on('submit', function (e) {
             e.preventDefault();
-            $.post('../modules/mod-return_chips.php', $(this).serialize(), handleResp);
+            // Excluir el campo de confirmación cantidad1 del envío
+            var formData = $(this).serializeArray().filter(function(field) {
+                return field.name !== 'cantidad1';
+            });
+            $.post('../modules/mod-return_chips.php', $.param(formData), handleResp);
         });
 
         // Respuesta común
