@@ -5,14 +5,26 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 
 # Habilitar mod_rewrite si usa .htaccess
 RUN a2enmod rewrite
-# Security: Disable dangerous PHP functions
-RUN echo "disable_functions = exec,passthru,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source" >> /usr/local/etc/php/conf.d/security.ini
 
-# Security: Set proper session configuration
-RUN echo "session.cookie_httponly = On\nsession.cookie_secure = Off\nsession.use_only_cookies = On\nsession.sid_length = 256" >> /usr/local/etc/php/conf.d/security.ini
+# Copiar configuración personalizada de PHP
+COPY php-custom.ini /usr/local/etc/php/conf.d/custom.ini
 
-# Security: Display errors to logs only (not to user)
-RUN echo "display_errors = Off\nlog_errors = On\nerror_log = /var/log/php-errors.log" >> /usr/local/etc/php/conf.d/security.ini
+# Configurar Apache para permitir .htaccess
+RUN echo '<Directory /var/www/html/>\n\
+    Options Indexes FollowSymLinks\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' > /etc/apache2/conf-available/docker-vhost.conf \
+    && a2enconf docker-vhost
 
-# Create logs directory
-RUN mkdir -p /var/log && touch /var/log/php-errors.log && chmod 666 /var/log/php-errors.log
+# Crear directorio de sesiones y establecer permisos
+RUN mkdir -p /tmp/sessions && \
+    chmod 1777 /tmp/sessions && \
+    chown www-data:www-data /tmp/sessions
+
+# Establecer permisos correctos
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html
+
+# Exponer puerto 80
+EXPOSE 80

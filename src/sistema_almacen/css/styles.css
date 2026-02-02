@@ -3,6 +3,13 @@
    ========================================================= */
 :root{
     --color-udlap:#ff7c04;
+    --color-udlap-dark:#d66803;
+    --font-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-heading: 'Arial', sans-serif;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,.1);
+    --shadow-md: 0 4px 8px rgba(0,0,0,.15);
+    --shadow-lg: 0 8px 16px rgba(0,0,0,.2);
+    --transition-base: all 0.3s ease;
 }
 
 @font-face{
@@ -13,6 +20,19 @@
     font-style:normal;
 }
 
+/* Reset básico */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    font-size: 16px;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+}
+
 /* =========================================================
    BARRA DE NAVEGACIÓN SUPERIOR
    ========================================================= */
@@ -21,71 +41,123 @@
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:10px;
-    margin:0.5% 0.5% 0;
-    box-shadow:0 2px 6px rgba(0,0,0,.3);
+    padding: clamp(10px, 2vw, 20px);
+    margin: 0.5%;
+    box-shadow: var(--shadow-md);
+    flex-wrap: wrap;
 }
 
 /* Logo y cabecera */
 .logo-container{
-    width:40%;
-    height:fit-content;
+    flex: 0 0 auto;
+    max-width: 250px;
+    min-width: 150px;
 }
-#logo-udlap{width:40%; margin-left:2%;}
 
-#header-container{width:50%; height:auto; text-align:right;}
-#header-container header{
-    font-family:Arial, sans-serif;
-    font-weight:bold;
-    color:#fff;
+#logo-udlap{
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    margin-left: 2%;
 }
+
+#header-container{
+    flex: 1 1 auto;
+    text-align: right;
+    min-width: 200px;
+    padding: 0 15px;
+}
+
+#header-container header{
+    font-family: var(--font-heading);
+    font-weight: bold;
+    color: #fff;
+    margin: 0.5rem 0;
+}
+
 #nav-departamento{
     font-family:"udlap_text_lightbold_italic", sans-serif;
     text-align:center;
-    font-size:140%;
+    font-size: clamp(1rem, 3vw, 1.4rem);
     font-weight:bolder;
     color:#fff;
-    margin-top:2%;
 }
+
 #nav-titulo{
     font-family:"udlap_text_lightbold_italic", sans-serif;
     text-align:center;
-    font-size:120%;
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
     font-weight:bolder;
     font-style:italic;
     color:#fff;
 }
 
-/* Utilidad de espaciado */
-.mr-3{margin-right:15px;}
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    #main-nav {
+        flex-direction: column;
+        text-align: center;
+        padding: 15px;
+    }
+    
+    .logo-container {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    #logo-udlap {
+        margin: 0 auto;
+    }
+    
+    #header-container {
+        width: 100%;
+        text-align: center;
+    }
+}
 
 /* =========================================================
    BOTÓN DE RETORNO (CÍRCULO VERDE)
    ========================================================= */
 .button-return{
-    width:8vh;
-    height:8vh;
+    width: clamp(50px, 8vh, 80px);
+    height: clamp(50px, 8vh, 80px);
     background:#008000;
     border-radius:50%;
-    box-shadow:0 8px 12px rgba(0,0,0,.25);
+    box-shadow: var(--shadow-md);
     display:flex;
     align-items:center;
     justify-content:center;
-    transition:transform .25s ease, background .25s ease;
+    transition: var(--transition-base);
     position:absolute;
     top:50%;
     left:0;
     transform:translateY(-50%);
+    text-decoration: none;
 }
+
 .button-return img{
     width:60%;
     height:60%;
     object-fit:contain;
 }
+
 .button-return:hover{
     transform:translateY(-50%) scale(1.1);
     background:linear-gradient(45deg,#008000,#b0d436);
     cursor:pointer;
+    box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 768px) {
+    .button-return {
+        position: static;
+        transform: none;
+        margin: 10px auto;
+    }
+    
+    .button-return:hover {
+        transform: scale(1.1);
+    }
 }
 
 /* =========================================================
@@ -93,35 +165,71 @@
    ========================================================= */
 .box-white,
 .encabezado-wrapper{
-    width:100vh;          /* misma anchura visual para alinear contenido */
-    margin:0 auto;
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(15px, 3vw, 30px);
 }
+
 .encabezado-wrapper{
     position:relative;
     text-align:center;
 }
+
+.encabezado-wrapper h3 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
+    margin-bottom: 0.5rem;
+}
+
+.encabezado-wrapper p {
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+}
+
 .box-white{
     position:relative;
     background:#fff;
-    padding:20px;
+    padding: clamp(15px, 3vw, 30px);
     border-radius:10px;
-    box-shadow:0 4px 8px rgba(0,0,0,.3);
-    transition:box-shadow .3s ease-in-out;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-base);
 }
-.box-white:hover{box-shadow:0 100px 160px rgba(255,180,5,.5);}
+
+.box-white:hover{
+    box-shadow: 0 12px 24px rgba(255,180,5,.3);
+}
+
+@media (max-width: 768px) {
+    .box-white,
+    .encabezado-wrapper {
+        width: 95%;
+        padding: 15px;
+    }
+}
 
 /* =========================================================
    FORMULARIOS
    ========================================================= */
 .form-control{
-    width:90%;
-    max-width:100%;
-    height:44px;
-    display:block;
-    margin:0 auto;
-    padding:.375rem .75rem;
-    font-size:1rem;
-    line-height:1.5;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: 44px;
+    display: block;
+    margin: 0 auto;
+    padding: .75rem;
+    font-size: clamp(0.9rem, 2vw, 1rem);
+    font-family: var(--font-primary);
+    line-height: 1.5;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    transition: var(--transition-base);
+}
+
+.form-control:focus {
+    border-color: var(--color-udlap);
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(255, 124, 4, 0.25);
 }
 
 /* Contenedor general centrado vertical y horizontal */
@@ -131,209 +239,380 @@
     justify-content:center;
     align-items:center;
     text-align:center;
-    height:100%;
+    flex-wrap: wrap;
+    padding: 1rem;
 }
-.container-general input{width:40vw;}
+
+.container-general input{
+    width: 100%;
+    max-width: 600px;
+}
+
+label {
+    font-weight: 500;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-family: var(--font-primary);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+@media (max-width: 768px) {
+    .form-control {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
+}
 
 /* =========================================================
    Paginación (botones Siguiente / Anterior y contador)
    ========================================================= */
 .pagination-buttons{
-    margin:20px 0;
-    display:flex;
-    justify-content:center;
+    margin: 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
+
 .pagination-buttons .btn{
-    padding:15px 30px;
-    font-size:1.2rem;
+    padding: clamp(10px, 2vw, 15px) clamp(20px, 4vw, 30px);
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    font-family: var(--font-primary);
+    transition: var(--transition-base);
 }
+
 .page-indicator{
-    font-size:1.5rem;
-    margin:0 20px;
-    align-self:center;
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    font-family: var(--font-primary);
+    margin: 0 15px;
+    align-self: center;
+}
+
+@media (max-width: 768px) {
+    .pagination-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .pagination-buttons .btn {
+        width: 100%;
+        max-width: 300px;
+    }
 }
 
 /* =========================================================
    Buscador con botón e input alineados
    ========================================================= */
-/* 1 ▸ El contenedor abarca todo el ancho y centra su contenido */
 .search-container{
-    width:100%;
-    display:flex;
-    justify-content:center;   /* centra el input en el eje horizontal */
-    align-items:center;       /* por si necesitara centrado vertical   */
-    margin:20px 0;            /* separación superior-inferior opcional */
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto;
+    padding: 0 15px;
 }
 
-/* 2 ▸ El propio input: ancho fijo (o máximo) y sin márgenes laterales */
 #searchInput{
-    width:100vh;               /* ancho relativo; ajústelo al gusto      */
-    max-width:1000px;          /* límite para pantallas grandes          */
-    min-width:240px;          /* evita que se comprima demasiado        */
-    margin:0;                 /* elimina posibles márgenes heredados    */
+    width: 100%;
+    max-width: 800px;
+    min-width: 200px;
+    margin: 0;
+    font-family: var(--font-primary);
+    font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+@media (max-width: 768px) {
+    .search-container {
+        padding: 0 10px;
+    }
+    
+    #searchInput {
+        font-size: 16px; /* Evita zoom en iOS */
+    }
 }
 
 /* =========================================================
    TARJETAS DE OPCIÓN (Menú de categorías)
    ========================================================= */
 .card-option{
-    background:#fff;
-    border-radius:8px;
-    padding:20px;
-    text-align:center;
-    transition:transform .3s ease;
-    height:100%;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    box-shadow:0 4px 6px rgba(0,0,0,.1);
+    background: #fff;
+    border-radius: 8px;
+    padding: clamp(15px, 3vw, 25px);
+    text-align: center;
+    transition: var(--transition-base);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: var(--shadow-sm);
+    cursor: pointer;
 }
-.card-option:hover{transform:scale(1.05);}
+
+.card-option:hover{
+    transform: scale(1.05);
+    box-shadow: var(--shadow-lg);
+}
+
 .card-option img{
-    width:100%;
-    max-height:180px;
-    object-fit:contain;
-    aspect-ratio:1/1;
+    width: 100%;
+    max-height: clamp(120px, 20vw, 180px);
+    object-fit: contain;
+    aspect-ratio: 1/1;
+    margin-bottom: 15px;
 }
+
 .card-option h3{
-    margin-top:15px;
-    font-weight:bold;
-    color:#fff;
+    margin-top: 15px;
+    font-weight: bold;
+    font-family: var(--font-heading);
+    font-size: clamp(1rem, 2.5vw, 1.3rem);
+    color: #fff;
 }
+
 /* Colores por categoría */
 #btn-equipos{background:#0048ff;}
 #btn-conexiones{background:#26ac2f;}
 #btn-chips{background:#ffbb00;}
 #btn-prestamos{background: #ff3b3f;}
-@media(max-width:767px){
-    .card-option img{max-height:120px;}
+
+@media(max-width:768px){
+    .card-option{
+        margin-bottom: 15px;
+    }
+    .card-option img{
+        max-height: 100px;
+    }
 }
 
 /* =========================================================
    TABLAS
    ========================================================= */
-th,td{text-align:center;}
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+th, td {
+    text-align: center;
+    padding: clamp(8px, 1.5vw, 12px);
+    font-family: var(--font-primary);
+    font-size: clamp(0.85rem, 1.8vw, 0.95rem);
+    vertical-align: middle;
+}
+
+th {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    th, td {
+        font-size: 0.85rem;
+        padding: 8px 4px;
+    }
+    
+    /* Permitir scroll horizontal en tablas */
+    .table {
+        min-width: 600px;
+    }
+}
 
 /* =========================================================
    Elementos auxiliares / utilidades
    ========================================================= */
 #escudo-udlap{
-    opacity:.2;
-    height:100%;
-    width:auto;
-    align-self:center;
-    z-index:-1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: clamp(300px, 60vh, 70vh);
+    width: auto;
+    max-width: none;
+    opacity: .12;
+    z-index: 0;
+    pointer-events: none;
 }
-label{
-    font-weight:300;
-    margin-top:1vw;
+
+.hidden{
+    display: none;
 }
-.hidden{display:none;}
-.form-container.show{display:block; opacity:1;}
+
+.form-container.show{
+    display: block;
+    opacity: 1;
+}
+
 #container-buttons{
-    position:absolute;
-    inset:0;
-    background:rgba(255,128,0,.5);
+    position: absolute;
+    inset: 0;
+    background: rgba(255,128,0,.5);
 }
 
-#escudo-udlap{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    height:70vh;   /* ocupa el % del alto visible            */
-    width:auto;               /* mantiene la proporción original           */
-    max-width:none;           /* anula max-width de .img-fluid             */
-    opacity:.12;              /* ajusta si lo notas muy tenue o muy fuerte */
-    z-index:0;
+.mr-3{
+    margin-right: 15px;
 }
-
-
 
 /*──────────────────────────────────────────────
-  5. CONTENEDOR PRINCIPAL (EXCLUYE BARRA)
+  CONTENEDOR PRINCIPAL (EXCLUYE BARRA)
 ──────────────────────────────────────────────*/
-#container-general{height:calc(100% - 85px);} /* 85 px ≈ alto de la barra */
+#container-general{
+    height: calc(100% - 85px);
+}
 
-/* Contenedor para columnas Bootstrap */
-.container-buttons{height:100%;position:relative;}
+.container-buttons{
+    height: 100%;
+    position: relative;
+}
 
-/* Columnas laterales */
 .column-left,
 .column-right{
-    position:relative;              /* referencia para posicionar los botones */
-    height:80vh;                    /* zona útil en cada lado                 */
+    position: relative;
+    height: 80vh;
+    min-height: 400px;
+}
+
+@media (max-width: 992px) {
+    .column-left,
+    .column-right {
+        height: auto;
+        min-height: 300px;
+    }
 }
 
 /*──────────────────────────────────────────────
-  6. BOTONES CIRCULARES
+  BOTONES CIRCULARES
 ──────────────────────────────────────────────*/
 .button-ca{
-    position:absolute;              /* necesario para ubicarlos en curva      */
-    width:6vw;  height:6vw;
-    min-width:60px; min-height:60px;
-    border-radius:50%;
-    background:var(--color-udlap);
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 10px 10px rgba(0,0,0,.3);
-    transition:transform .3s ease;
-    z-index:2;
+    position: absolute;
+    width: clamp(60px, 6vw, 80px);
+    height: clamp(60px, 6vw, 80px);
+    border-radius: 50%;
+    background: var(--color-udlap);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition-base);
+    z-index: 2;
+    cursor: pointer;
 }
+
 .button-ca img{
-    width:4vw;height:4vw;
-    min-width:30px;min-height:30px;
+    width: clamp(30px, 4vw, 50px);
+    height: clamp(30px, 4vw, 50px);
 }
+
 .button-ca:hover{
-    transform:scale(1.1);
-    background:linear-gradient(45deg,var(--color-udlap),orange);
-    cursor:pointer;
+    transform: scale(1.1);
+    background: linear-gradient(45deg, var(--color-udlap), orange);
+    box-shadow: var(--shadow-lg);
 }
 
 /*──────────────────────────────────────────────
-  7. POSICIÓN CURVA (OCHO BOTONES)
+  POSICIÓN CURVA (OCHO BOTONES)
 ──────────────────────────────────────────────*/
 /* Lado izquierdo (btn-curve-1 … btn-curve-4) */
-.btn-curve-1{top:  8%;left:85%;}
-.btn-curve-2{top: 27%;left: 60%;}
-.btn-curve-3{top: 53%;left: 60%;}
-.btn-curve-4{top: 78%;left:85%;}
+.btn-curve-1{top: 8%; left: 85%;}
+.btn-curve-2{top: 27%; left: 60%;}
+.btn-curve-3{top: 53%; left: 60%;}
+.btn-curve-4{top: 78%; left: 85%;}
 
-/* Lado derecho (btn-curve-5 … btn-curve-8)   */
-.btn-curve-5{top:  8%;right:85%;}
-.btn-curve-6{top: 27%;right: 60%;}
-.btn-curve-7{top: 53%;right: 60%;}
-.btn-curve-8{top: 78%;right:85%;}
+/* Lado derecho (btn-curve-5 … btn-curve-8) */
+.btn-curve-5{top: 8%; right: 85%;}
+.btn-curve-6{top: 27%; right: 60%;}
+.btn-curve-7{top: 53%; right: 60%;}
+.btn-curve-8{top: 78%; right: 85%;}
 
-/* Ajusta los porcentajes ↑ para abrir/cerrar el arco. */
+/* Responsive para tablets */
+@media (max-width: 992px) {
+    .btn-curve-1, .btn-curve-5 {top: 5%;}
+    .btn-curve-2, .btn-curve-6 {top: 25%;}
+    .btn-curve-3, .btn-curve-7 {top: 50%;}
+    .btn-curve-4, .btn-curve-8 {top: 75%;}
+    
+    .btn-curve-1, .btn-curve-2, .btn-curve-3, .btn-curve-4 {
+        left: 75%;
+    }
+    
+    .btn-curve-5, .btn-curve-6, .btn-curve-7, .btn-curve-8 {
+        right: 75%;
+    }
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .button-ca {
+        position: static;
+        margin: 10px auto;
+        display: inline-flex;
+    }
+    
+    .column-left, .column-right {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+        padding: 20px;
+    }
+}
 
 /*──────────────────────────────────────────────
-  8. TOOLTIP GENÉRICO
+  TOOLTIP GENÉRICO
 ──────────────────────────────────────────────*/
 .tooltip-left,
 .tooltip-right{
-    visibility:hidden;
-    position:absolute;
-    top:50%;transform:translateY(-50%);
-    width:17vw;max-width:250px;
-    background:var(--color-udlap);
-    color:#fff;border-radius:6px;
-    padding:.5em;text-align:center;
-    box-shadow:0 4px 8px rgba(0,0,0,.3);
-    transition:opacity .25s ease;
-    opacity:0;pointer-events:none;z-index:10;
+    visibility: hidden;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: clamp(150px, 20vw, 250px);
+    max-width: 250px;
+    background: var(--color-udlap);
+    color: #fff;
+    border-radius: 6px;
+    padding: .75em;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+    transition: opacity .25s ease;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    font-family: var(--font-primary);
+    font-size: clamp(0.8rem, 1.5vw, 0.95rem);
 }
-.tooltip-left {left:110%;}
-.tooltip-right{right:110%;}
+
+.tooltip-left {left: 110%;}
+.tooltip-right{right: 110%;}
 
 .tooltip-left::after,
 .tooltip-right::after{
-    content:'';position:absolute;top:50%;
-    transform:translateY(-50%);
-    border:5px solid transparent;
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 5px solid transparent;
 }
-.tooltip-left::after {left:-10px; border-right-color:var(--color-udlap);}
-.tooltip-right::after{right:-10px;border-left-color:var(--color-udlap);}
+
+.tooltip-left::after {
+    left: -10px;
+    border-right-color: var(--color-udlap);
+}
+
+.tooltip-right::after{
+    right: -10px;
+    border-left-color: var(--color-udlap);
+}
 
 .button-ca:hover .tooltip-left,
-.button-ca:hover .tooltip-right{visibility:visible;opacity:1;}
+.button-ca:hover .tooltip-right{
+    visibility: visible;
+    opacity: 1;
+}
 
+@media (max-width: 768px) {
+    .tooltip-left,
+    .tooltip-right {
+        display: none; /* Ocultar tooltips en móvil */
+    }
+}

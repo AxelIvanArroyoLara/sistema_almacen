@@ -4,7 +4,7 @@
  *  – Préstamo  → mod-request_conexion.php
  *  – Devolución→ mod-return_conexion.php
  * ---------------------------------------------------------*/
-session_start();
+require_once __DIR__ . '/../modules/session_helper.php';
 include_once '../modules/conn.php';
 
 
@@ -108,8 +108,8 @@ $conexiones = getConexiones($connection);
 <script>
 $(function () {
     /* ----------  variables globales  ---------- */
-    const user_id  = <?= json_encode(htmlspecialchars($user_id ?? '', ENT_QUOTES, 'UTF-8')) ?>;
-    const admin_id = <?= json_encode(htmlspecialchars($admin_id ?? '', ENT_QUOTES, 'UTF-8')) ?>;
+    const user_id  = <?= json_encode($user_id) ?>;
+    const admin_id = <?= json_encode($admin_id) ?>;
     let currentPage = 1, rowsPerPage = 10;
 
     function validarCantidad(modal, input1, input2, boton) {
@@ -154,7 +154,7 @@ $(function () {
     $(document).on('click', '.devolver', function () {
         const art = $(this).data('id');
         $('#art_no_d').val(art);
-        $('#cantidad_d').val(1);
+        $('#cantidad_d').val('');
         $('#user_id_d').val(user_id);
         $('#admin_id_d').val(admin_id);
         $('#modalDevolucion').modal('show');
@@ -163,13 +163,21 @@ $(function () {
     /* ----------  submit PRÉSTAMO  ---------- */
     $('#formPrestamo').on('submit', function (e) {
         e.preventDefault();
-        $.post('../modules/mod-request_conexion.php', $(this).serialize(), handleResp);
+        // Excluir el campo de confirmación cantidad1 del envío
+        var formData = $(this).serializeArray().filter(function(field) {
+            return field.name !== 'cantidad1';
+        });
+        $.post('../modules/mod-request_conexion.php', $.param(formData), handleResp);
     });
 
     /* ----------  submit DEVOLUCIÓN  ---------- */
     $('#formDevolucion').on('submit', function (e) {
         e.preventDefault();
-        $.post('../modules/mod-return_conexion.php', $(this).serialize(), handleResp);
+        // Excluir el campo de confirmación cantidad1 del envío
+        var formData = $(this).serializeArray().filter(function(field) {
+            return field.name !== 'cantidad1';
+        });
+        $.post('../modules/mod-return_conexion.php', $.param(formData), handleResp);
     });
 
     /* ----------  respuesta común  ---------- */
@@ -218,7 +226,7 @@ $(function () {
 <!-- ······························· MODAL PRÉSTAMO ··························· -->
 <div class="modal fade text-center" id="modalPrestamo" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formPrestamo" autocomplete="off">
+    <form id="formPrestamo">
       <input type="hidden" name="user_id"  id="user_id_p">
       <input type="hidden" name="admin_id" id="admin_id_p">
 
@@ -255,7 +263,7 @@ $(function () {
 <!-- ─────────────────── MODAL DEVOLUCIÓN ─────────────────── -->
 <div class="modal fade text-center" id="modalDevolucion" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formDevolucion" autocomplete="off">
+    <form id="formDevolucion">
       <input type="hidden" name="user_id"  id="user_id_d">
       <input type="hidden" name="admin_id" id="admin_id_d">
 

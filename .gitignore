@@ -1,12 +1,57 @@
-.env
-.env.local
-.env.example
-*.log
-node_modules/
-.DS_Store
+# IDEs y Editores
+.idea/
+.vscode/
 *.swp
 *.swo
 *~
-src/sistema_almacen/.env
-src/sistema_almacen/.env.local
-src/sistema_almacen/security.log
+.project
+.settings/
+.classpath
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+*.bak
+*.backup
+
+# Archivos de prueba
+test.php
+test-*.php
+**/prueba
+**/pruebas/
+debug.log
+*.tmp
+
+# Docker
+.env
+
+# Bases de datos temporales
+*.sql.backup
+*dump.sql
+_localhost*.sql
+
+# Node modules (si aplica en el futuro)
+node_modules/
+package-lock.json
+
+# PHP
+vendor/
+composer.lock
+
+# Logs
+*.log
+logs/
+
+# Archivos temporales de sesión
+/tmp/sess_*
+
+# Backups
+backups/
+*.zip
+*.tar.gz
+
+# Archivos personales
+ideas.txt
+roadmap.txt
+CHANGELOG.txt

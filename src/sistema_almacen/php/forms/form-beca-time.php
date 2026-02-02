@@ -1,16 +1,26 @@
 <?php
+// Validar y limpiar ID de sesión antes de iniciar
+if (isset($_COOKIE['PHPSESSID']) && strlen($_COOKIE['PHPSESSID']) > 40) {
+    // ID de sesión demasiado largo, forzar uno nuevo
+    unset($_COOKIE['PHPSESSID']);
+    setcookie('PHPSESSID', '', time() - 3600, '/');
+}
 session_start();
+// Regenerar ID si es necesario
+if (strlen(session_id()) > 40) {
+    session_regenerate_id(true);
+}
 include_once '../modules/conn.php';
 
 if (!isset($_SESSION['user-id'])) {
-    header("Location: ../failure.php");
+    header("Location: ../modules/failure.php");
     exit;
 }
 
 $user_id = $_SESSION['user-id'];
 
 // Recuperar nombre de usuario
-$user_stmt = $connection->prepare("SELECT nombre FROM usuarios WHERE NUMERO = ?");
+$user_stmt = $connection->prepare("SELECT nombre FROM usuarios WHERE numero = ?");
 $user_stmt->execute([$user_id]);
 $user = $user_stmt->fetch(PDO::FETCH_ASSOC);
 $user_name = $user ? $user['nombre'] : 'Usuario';
@@ -73,7 +83,7 @@ $horas_totales = gmdate("H:i:s", $total_segundos);
             <h5 class="text-center">Total acumulado: <strong><?= $horas_totales ?></strong></h5>
             <br>
             <!-- Formulario de registro -->
-            <form action="../modules/bkend-beca-time.php" method="POST" class="text-center mb-4" autocomplete="off">
+            <form action="../modules/bkend-beca-time.php" method="POST" class="text-center mb-4">
                 <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id) ?>">
                 <button name="accion" value="entrada" class="btn btn-success btn-lg mr-2">Registrar Entrada</button>
                 <button name="accion" value="salida" class="btn btn-danger btn-lg">Registrar Salida</button>

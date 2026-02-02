@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/session_helper.php';
 include_once '../modules/conn.php';
 
 if (!isset($_SESSION['user-id']) || $_SESSION['user-id'] !== $_POST['user_id']) {

@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/../modules/session_helper.php';
 include_once '../modules/conn.php';
 include_once '../modules/bkend-consult_chips.php';
 
@@ -109,8 +109,8 @@ function safe($val) {
             const art_no = $(this).data('id');
 
             $('#art_no_p').val(art_no);
-            $('#cantidad_p').val(1);
-            $('#cantidad_p1').val(1);
+            $('#cantidad_p').val('');
+            $('#cantidad_p1').val('');
             $('#user_id_p').val(user_id);
             $('#admin_id_p').val(admin_id);
             $('#btnConfirmarPrestamo').prop('disabled', true);
@@ -122,8 +122,8 @@ function safe($val) {
             const art_no = $(this).data('id');
 
             $('#art_no_d').val(art_no);
-            $('#cantidad_d').val(1);
-            $('#cantidad_d1').val(1);
+            $('#cantidad_d').val('');
+            $('#cantidad_d1').val('');
             $('#user_id_d').val(user_id);
             $('#admin_id_d').val(admin_id);
             $('#btnConfirmarDevolucion').prop('disabled', true);
@@ -150,13 +150,21 @@ function safe($val) {
         // Envío del formulario de préstamo
         $('#formPrestamo').on('submit', function (e) {
             e.preventDefault();
-            $.post('../modules/mod-request_chips.php', $(this).serialize(), handleResp);
+            // Excluir el campo de confirmación cantidad1 del envío
+            var formData = $(this).serializeArray().filter(function(field) {
+                return field.name !== 'cantidad1';
+            });
+            $.post('../modules/mod-request_chips.php', $.param(formData), handleResp);
         });
 
         // Envío del formulario de devolución
         $('#formDevolucion').on('submit', function (e) {
             e.preventDefault();
-            $.post('../modules/mod-return_chips.php', $(this).serialize(), handleResp);
+            // Excluir el campo de confirmación cantidad1 del envío
+            var formData = $(this).serializeArray().filter(function(field) {
+                return field.name !== 'cantidad1';
+            });
+            $.post('../modules/mod-return_chips.php', $.param(formData), handleResp);
         });
 
         // Respuesta común
@@ -255,7 +263,7 @@ function safe($val) {
 
 <div class="modal fade text-center" id="modalPrestamo" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formPrestamo" autocomplete="off">
+    <form id="formPrestamo">
       <input type="hidden" name="user_id" id="user_id_p">
       <input type="hidden" name="admin_id" id="admin_id_p">
 
@@ -288,7 +296,7 @@ function safe($val) {
 
 <div class="modal fade text-center" id="modalDevolucion" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <form id="formDevolucion" autocomplete="off">
+    <form id="formDevolucion">
       <input type="hidden" name="user_id" id="user_id_d">
       <input type="hidden" name="admin_id" id="admin_id_d">
 
